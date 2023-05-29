@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: db7311c4581f94245a4158ad0c8e6616
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - spawnLocationObj: {fileID: 6935620266522486943, guid: 7baf9a4c54f478c49b6dcdee52cc56d4, type: 3}
+  - TreeType0Unit1: {fileID: 5811575722081858418, guid: 3aeee749fbcaa614a88d301abe5c826e, type: 3}
+  - TreeType1Unit1: {fileID: 6180720877380194475, guid: 75ab206ad84086749a4f282e6e8ecb3e, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
