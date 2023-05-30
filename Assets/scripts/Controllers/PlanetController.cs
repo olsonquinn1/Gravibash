@@ -7,52 +7,50 @@ using UnityEngine.Rendering.Universal;
 
 public class PlanetController : MonoBehaviour
 {
-    [Header("Mesh")]
-    [SerializeField] float radius;
-    [SerializeField][Min(3)] int segments;
-    [SerializeField] int textureTiers;
-    [SerializeField][Min(2)] int uvWidth;
-    [SerializeField] bool uvMirror;
-    [SerializeField] float heightPerLevel;
-    [SerializeField] int surfaceLevel;
+    //Mesh
+    private float radius;
+    private int segments;
+    private int textureTiers;
+    private int uvWidth;
+    private bool uvMirror;
+    private float heightPerLevel;
+    private int surfaceLevel;
 
-    [Header("Lighting")]
-    [SerializeField] GameObject planetLighting;
-    [SerializeField] float sunAngle;
-    private Light2D sunlight;
-    private Light2D dayGlow;
-    private Light2D nightGlow;
+    //Lighting
+    private GameObject planetLighting;
+    
+    //terrain gen
+    private float smoothness;
+    private float minSmoothPercent;
+    private float smoothOffset;
 
-    [Header("Terrain Generation")]
-    [Min(0)] [SerializeField] float smoothness;
-    [Range(0, 10)][SerializeField] float minSmoothPercent;
-    [Min(0.001f)][SerializeField] float smoothOffset;
+    private float scale;
+    private float minScalePercent;
+    private float scaleOffset;
 
-    [Min(0)][SerializeField] float scale;
-    [Range(0, 10)][SerializeField] float minScalePercent;
-    [Min(0.001f)][SerializeField] float scaleOffset;
+    private float seed;
 
-    [SerializeField] float seed;
+    //surface object gen
+    private bool enableScatter = true;
+    private List<ScatterGroup> scatterGroups;
+    private float patchScale;
+    private float treeDensity;
+    private float probabilityShift;
+    private float TreeScaleMin;
+    private float TreeScaleMax;
+    private float TreeHeightOffset;
 
-    [Header("Surface Object Generation")]
-    [SerializeField] bool enableScatter = true;
-    [SerializeField] List<ScatterGroup> scatterGroups;
-    [SerializeField] float patchScale = 15;
-    [SerializeField] float treeDensity = 4;
-    [SerializeField] float probabilityShift = 1;
-    [SerializeField] float TreeScaleMin = 0.2f;
-    [SerializeField] float TreeScaleMax = 0.4f;
-    [SerializeField] float TreeHeightOffset = 0;
+    //physics
+    private float mass;
+    private float gravityFalloff; //how distance affects gravity falloff: 0 = not at all, 2 = realistic
 
-
-    [Header("Physics")]
-    [SerializeField] float mass;
-    [SerializeField] float gravityFalloff; //how distance affects gravity falloff: 0 = not at all, 2 = realistic
+    [SerializeField] PlanetObject planet;
 
     [Header("Multiplayer")]
     [SerializeField] GameObject spawnLocationObj;
     private List<GameObject> spawnLocations;
     private GameObject ScatterBase;
+    private float sunAngle = 0;
 
     private float G = 6.67f * Pow(10, -6); // 6.67 x 10^-11 (adjusted to make lower mass values work better)
     private System.Random rand;
@@ -73,9 +71,45 @@ public class PlanetController : MonoBehaviour
             accel * Sin(angle)
         );
     }
+
+    private void loadFromObject() {
+        radius = planet.radius;
+        segments = planet.segments;
+        textureTiers = planet.textureTiers;
+        uvWidth = planet.uvWidth;
+        uvMirror = planet.uvMirror;
+        heightPerLevel = planet.heightPerLevel;
+        surfaceLevel = planet.surfaceLevel;
+
+        planetLighting = planet.planetLighting;
+        smoothness = planet.smoothness;
+        minSmoothPercent = planet.minSmoothPercent;
+        smoothOffset = planet.smoothOffset;
+
+        scale = planet.scale;
+        minScalePercent = planet.minScalePercent;
+        scaleOffset = planet.scaleOffset;
+
+        seed = planet.seed;
+
+        enableScatter = planet.enableScatter;
+        scatterGroups = planet.scatterGroups;
+        patchScale = planet.patchScale;
+        treeDensity = planet.treeDensity;
+        probabilityShift = planet.probabilityShift;
+        TreeScaleMin = planet.TreeScaleMin;
+        TreeScaleMax = planet.TreeScaleMax;
+        TreeHeightOffset = planet.TreeHeightOffset;
+
+        mass = planet.mass;
+        gravityFalloff = planet.gravityFalloff;
+    }
+
     public void updatePlanet() {
         MeshFilter mf = transform.GetComponentInChildren<MeshFilter>();
         PolygonCollider2D pc = GetComponent<PolygonCollider2D>();
+        loadFromObject();
+        UnityEngine.Random.InitState((int) Floor(seed));
         generatePlanetMesh(ref mf, ref pc);
     }
 
@@ -136,7 +170,7 @@ public class PlanetController : MonoBehaviour
     }
 
     void generatePlanetMesh(ref MeshFilter mf, ref PolygonCollider2D pc) {
-        
+        float fineSeed = seed / 100;
         int trianglesPerSegment = textureTiers * 2;
         float half = 0.5f / segments;
         int uvLevels = textureTiers + 1;
@@ -156,8 +190,8 @@ public class PlanetController : MonoBehaviour
             float angle = PI * 2 * ((float) i / segments);
             perlinSmooth[i] = 
                 PerlinNoise(
-                    (seed + 1 + Cos(angle)) / (smoothOffset / 1000),
-                    (seed + 1 + Sin(angle)) / (smoothOffset / 1000)
+                    (fineSeed + 1 + Cos(angle)) / (smoothOffset / 1000),
+                    (fineSeed + 1 + Sin(angle)) / (smoothOffset / 1000)
                 ) * ((1 - (minSmoothPercent / 10))) + ((minSmoothPercent / 10));
             perlinSmoothSum += 1/perlinSmooth[i];
         }
@@ -167,8 +201,8 @@ public class PlanetController : MonoBehaviour
             float angle = PI * 2 * ((float) i / segments);
             perlinScale[i] = 
                 PerlinNoise(
-                    (seed + 2 + Cos(angle)) / scaleOffset,
-                    (seed + 2 + Sin(angle)) / scaleOffset
+                    (fineSeed + 2 + Cos(angle)) / scaleOffset,
+                    (fineSeed + 2 + Sin(angle)) / scaleOffset
                 ) * (scale * (1 - (minScalePercent / 10))) + (scale * (minScalePercent / 10));
         }
 
@@ -178,8 +212,8 @@ public class PlanetController : MonoBehaviour
         for(int i = 0; i < segments; i++) {
             perlinHeights[i] = 
                 PerlinNoise(
-                    (seed + Cos(angleIntegral)) * 100 / smoothness,
-                    (seed + Sin(angleIntegral)) * 100 / smoothness
+                    (fineSeed + Cos(angleIntegral)) * 100 / smoothness,
+                    (fineSeed + Sin(angleIntegral)) * 100 / smoothness
                 ) * perlinScale[i];
             angleIntegral += angleScaler/perlinSmooth[i];
         }
@@ -292,8 +326,6 @@ public class PlanetController : MonoBehaviour
 
     void Start()
     {
-        UnityEngine.Random.InitState((int) Floor(seed));
-
         ScatterBase = new GameObject("ScatterBase");
         ScatterBase.transform.SetParent(transform);
 
@@ -315,9 +347,6 @@ public class PlanetController : MonoBehaviour
 
         //create lighting
         Instantiate(planetLighting, transform);
-        sunlight = planetLighting.transform.GetChild(0).GetComponent<Light2D>();
-        dayGlow = planetLighting.transform.GetChild(1).GetComponent<Light2D>();
-        nightGlow = planetLighting.transform.GetChild(2).GetComponent<Light2D>();
     }
 
     void Update() {
