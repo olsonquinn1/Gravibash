@@ -59,17 +59,6 @@ public class PlanetController : MonoBehaviour
 
     [HideInInspector] public int id;
     private bool initialized = false;
-
-    //hack the 2d shadowcaster...
-    private ShadowCaster2D shadowCaster;
-    private static BindingFlags accessFlagsPrivate =
-        BindingFlags.NonPublic | BindingFlags.Instance;
-    private static FieldInfo meshField =
-        typeof(ShadowCaster2D).GetField("m_Mesh", accessFlagsPrivate);
-    private static FieldInfo shapePathField =
-        typeof(ShadowCaster2D).GetField("m_ShapePath", accessFlagsPrivate);
-    private static MethodInfo onEnableMethod =
-        typeof(ShadowCaster2D).GetMethod("OnEnable", accessFlagsPrivate);
     
     //returns gravity acceleration vector for given object position and mass from this planet
     public Vector2 gravVector(float x1, float y1, float m1) {
@@ -127,7 +116,6 @@ public class PlanetController : MonoBehaviour
         loadFromObject();
         UnityEngine.Random.InitState((int) Floor(seed));
         generatePlanetMesh(ref mf, ref pc);
-        updateShadowCasterCollider(vecArrayConvert(pc.GetPath(0)));
     }
 
     private Vector3[] vecArrayConvert(Vector2[] vec) {
@@ -188,13 +176,6 @@ public class PlanetController : MonoBehaviour
                 TempObj.transform.localScale = treeScale;
             }
         }
-    }
-
-    private void updateShadowCasterCollider(Vector3[] path) {
-        shadowCaster = GetComponent<ShadowCaster2D>();
-        shapePathField.SetValue(shadowCaster, path);
-        meshField.SetValue(shadowCaster, null);
-        onEnableMethod.Invoke(shadowCaster, new object[0]);
     }
 
     GameObject chooseScatterFromGroup(int groupIndex) {

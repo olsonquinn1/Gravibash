@@ -6,9 +6,7 @@ using Mirror;
 
 public class ProjectileBehavior : NetworkBehaviour
 {
-    [HideInInspector] public PlanetController planetScript;
-
-    
+    [HideInInspector] public PlanetManager planetMan;
 
     private float timeAlive = 0;
     public float speed = 5;
@@ -16,7 +14,7 @@ public class ProjectileBehavior : NetworkBehaviour
     private Rigidbody2D rb;
 
     public void Init(Vector3 initialPosition, Vector2 initialVelocity, float angle) {
-        planetScript = FindFirstObjectByType<PlanetController>();
+        planetMan = FindFirstObjectByType<PlanetManager>();
         rb.velocity = initialVelocity + ( speed * new Vector2(Cos(angle), Sin(angle)) );
         transform.position = initialPosition;
     }
@@ -39,7 +37,7 @@ public class ProjectileBehavior : NetworkBehaviour
 
     void FixedUpdate()
     {
-        rb.AddForce(Time.fixedDeltaTime * planetScript.gravVector(
+        rb.AddForce(Time.fixedDeltaTime * planetMan.gravVectorSum(
             transform.position.x, transform.position.y, rb.mass
         ));
     }
