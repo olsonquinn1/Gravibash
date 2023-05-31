@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Moon_1_sc
   m_EditorClassIdentifier: 
   planet: {fileID: 11400000, guid: 91fb42637e1b8eb449d779a4439c991d, type: 2}
-  isStatic: 1
-  origin: {x: 50, y: 50, z: 0}
-  majorAxis: 1
-  minorAxis: 1
+  isStatic: 0
+  origin: {x: 0, y: 0, z: 0}
+  majorAxis: 35
+  minorAxis: 35
   rotation: 0
   period: 60
-  offset: 0
+  offset: 0.659

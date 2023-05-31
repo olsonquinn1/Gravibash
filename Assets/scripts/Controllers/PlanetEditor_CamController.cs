@@ -5,11 +5,9 @@ using UnityEngine;
 public class PlanetEditor_CamController : MonoBehaviour
 {
     private float panSpeed = 10;
-    [SerializeField] PlanetController planet;
+    [SerializeField] private PlanetManager planetMan;
 
     void Start() {
-        planet = GameObject.Find("MainPlanet").GetComponent<PlanetController>();
-        planet.GetComponent<PlanetController>().Init();
     }
     void Update()
     {
@@ -23,6 +21,6 @@ public class PlanetEditor_CamController : MonoBehaviour
 
         Camera.main.transform.position += panSpeed * translate * Time.deltaTime * Camera.main.orthographicSize / 10;
 
-        planet.updatePlanet();
+        planetMan.updateAllPlanetGen();
     }
 }

@@ -26,6 +26,6 @@ public class PlanetSceneObject : ScriptableObject
     [SerializeField][Min(0)] public float minorAxis = 1;
     [SerializeField] public float rotation = 0;
     [SerializeField] public float period = 60;
-    [SerializeField] public float offset = 0;
+    [SerializeField][Range(0, 1)] public float offset = 0;
 
 }

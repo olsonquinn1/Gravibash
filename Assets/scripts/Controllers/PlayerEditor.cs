@@ -10,7 +10,7 @@ public class PlayerEditor : MonoBehaviour
 {
     
     [Header("Physics")]
-    [SerializeField] GameObject planetObj;
+    private PlanetManager pm;
     [SerializeField] private float movePower = 1000;
     [SerializeField] private float jumpPower = 500;
 
@@ -35,11 +35,10 @@ public class PlayerEditor : MonoBehaviour
         rb = transform.GetComponentInChildren<Rigidbody2D>();
         model = transform.GetChild(1).gameObject;
         rb.centerOfMass = new Vector2(0, -0.3f);
-        planetObj = GameObject.Find("MainPlanet");
-        planetScript = planetObj.GetComponent<PlanetController>();
+        pm = GameObject.Find("PlanetManager").GetComponent<PlanetManager>();
         //align player to gravity when spawned
         rb.rotation -= Vector2.SignedAngle(
-            planetScript.gravVector(transform.position.x, transform.position.y, rb.mass),
+            pm.gravVectorSum(transform.position.x, transform.position.y, rb.mass),
             new Vector2(Cos(rb.rotation * PI / 180), Sin(rb.rotation * PI / 180))
         ) - 90;
     }
@@ -73,7 +72,7 @@ public class PlayerEditor : MonoBehaviour
         }
 
         //gravity
-        Vector2 gVector = planetScript.gravVector(
+        Vector2 gVector = pm.gravVectorSum(
             transform.position.x, transform.position.y, rb.mass
         );
 
