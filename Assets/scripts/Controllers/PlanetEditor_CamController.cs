@@ -9,6 +9,7 @@ public class PlanetEditor_CamController : MonoBehaviour
 
     void Start() {
         planet = GameObject.Find("MainPlanet").GetComponent<PlanetController>();
+        planet.GetComponent<PlanetController>().Init();
     }
     void Update()
     {

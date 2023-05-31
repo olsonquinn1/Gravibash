@@ -9,6 +9,7 @@ using System.Reflection;
 public class PlanetController : MonoBehaviour
 {
     //Mesh
+    private Material planetMaterial;
     private float radius;
     private int segments;
     private int textureTiers;
@@ -78,6 +79,7 @@ public class PlanetController : MonoBehaviour
     }
 
     private void loadFromObject() {
+        planetMaterial = planet.planetMaterial;
         radius = planet.radius;
         segments = planet.segments;
         textureTiers = planet.textureTiers;
@@ -114,15 +116,9 @@ public class PlanetController : MonoBehaviour
         MeshFilter mf = transform.GetComponentInChildren<MeshFilter>();
         PolygonCollider2D pc = GetComponent<PolygonCollider2D>();
         loadFromObject();
+        GetComponentInChildren<MeshRenderer>().material = planet.planetMaterial;
         UnityEngine.Random.InitState((int) Floor(seed));
         generatePlanetMesh(ref mf, ref pc);
-    }
-
-    private Vector3[] vecArrayConvert(Vector2[] vec) {
-        Vector3[] newVec = new Vector3[vec.Length];
-        for(int i = 0; i < vec.Length; i++)
-            newVec[i] = new Vector3(vec[i].x, vec[i].y, 0);
-        return newVec;
     }
 
     private float randomFloat() {
@@ -136,8 +132,9 @@ public class PlanetController : MonoBehaviour
     void generateSurfaceScatter(List<Vector2> colliderVertices) {
         UnityEngine.Random.InitState((int) Floor(seed));
         
-        foreach(Transform child in ScatterBase.transform)
-            GameObject.Destroy(child.gameObject);
+        if(ScatterBase.transform.childCount > 0)
+            foreach(Transform child in ScatterBase.transform)
+                GameObject.Destroy(child.gameObject);
 
         int vertCount = colliderVertices.Count;
 
@@ -330,7 +327,7 @@ public class PlanetController : MonoBehaviour
         mf.mesh = mesh;
         pc.SetPath(0, colliderVertices.ToArray());
 
-        if(enableScatter) generateSurfaceScatter(colliderVertices);
+        if(enableScatter && planet.scatterGroups.Count > 0) generateSurfaceScatter(colliderVertices);
     }
 
     public Vector3 getSpawnLocation() {
@@ -363,13 +360,13 @@ public class PlanetController : MonoBehaviour
         }
 
         //create lighting
-        Instantiate(planetLighting, transform);
+        if(planetLighting != null) Instantiate(planetLighting, transform);
     }
 
     void Update() {
         //regenerate planet
         if(Input.GetKeyDown(KeyCode.G)) {
-            updatePlanet();
+            if(initialized) updatePlanet();
         }
         
         if(initialized) updateLighting();

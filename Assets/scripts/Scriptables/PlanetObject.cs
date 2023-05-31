@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlanetObject : ScriptableObject
 {
     [Header("Mesh")]
-    [SerializeField] Material planetMaterial;
+    [SerializeField] public Material planetMaterial;
     [SerializeField] public float radius = 20;
     [SerializeField][Min(3)] public int segments = 200;
     [SerializeField] public int textureTiers = 3;
@@ -38,7 +38,6 @@ public class PlanetObject : ScriptableObject
     [SerializeField] public float TreeScaleMin = 0.2f;
     [SerializeField] public float TreeScaleMax = 0.4f;
     [SerializeField] public float TreeHeightOffset = 0;
-
 
     [Header("Physics")]
     [SerializeField] public float mass = 5000000000;
