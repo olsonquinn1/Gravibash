@@ -10,7 +10,7 @@ public class Player : NetworkBehaviour
 {
     
     [Header("Physics")]
-    [SerializeField] GameObject planetObj;
+    private PlanetManager pm;
     [SerializeField] private float movePower = 1250;
     [SerializeField] private float jumpPower = 750;
 
@@ -31,7 +31,6 @@ public class Player : NetworkBehaviour
     private Rigidbody2D rb;
     private Transform lookTransform;
     private GameObject model;
-    private PlanetController planetScript;
 
     //timers and ground detection
     private bool onGround = false;
@@ -118,8 +117,7 @@ public class Player : NetworkBehaviour
         rb = transform.GetComponentInChildren<Rigidbody2D>();
         model = transform.GetChild(1).gameObject;
         rb.centerOfMass = new Vector2(0, -0.3f);
-        planetObj = GameObject.Find("MainPlanet");
-        planetScript = planetObj.GetComponent<PlanetController>();
+        pm = GameObject.Find("PlanetManager").GetComponent<PlanetManager>();
         //align player to gravity when spawned
         alignToGravity();
     }
@@ -160,7 +158,7 @@ public class Player : NetworkBehaviour
         }
 
         //gravity
-        Vector2 gVector = planetScript.gravVector(
+        Vector2 gVector = pm.gravVectorSum(
             transform.position.x, transform.position.y, rb.mass
         );
 
@@ -176,7 +174,7 @@ public class Player : NetworkBehaviour
 
     private void alignToGravity() {
         rb.rotation -= Vector2.SignedAngle(
-            planetScript.gravVector(transform.position.x, transform.position.y, rb.mass),
+            pm.gravVectorSum(transform.position.x, transform.position.y, rb.mass),
             new Vector2(Cos(rb.rotation * PI / 180), Sin(rb.rotation * PI / 180))
         ) - 90;
     }
@@ -195,7 +193,7 @@ public class Player : NetworkBehaviour
 
         if(Input.GetKeyDown(KeyCode.R)) {
             changeHealth(healthMax);
-            transform.position = planetScript.getSpawnLocation();
+            transform.position = pm.getSpawnLocation();
             rb.velocity = new Vector2(0, 0);
             alignToGravity();
         }

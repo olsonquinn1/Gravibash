@@ -480,34 +480,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db7311c4581f94245a4158ad0c8e6616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 20
-  segments: 204
-  textureTiers: 6
-  uvWidth: 6
-  uvMirror: 1
-  heightPerLevel: 1
-  surfaceLevel: 2
-  planetLighting: {fileID: 4404863688223244734, guid: 0f94cdbecc9b82a418be7494314c8ca5, type: 3}
-  sunAngle: 0
-  smoothness: 35.6
-  minSmoothPercent: 9.9896
-  smoothOffset: 10
-  scale: 4
-  minScalePercent: 6.7
-  scaleOffset: 1
-  seed: 51
-  enableScatter: 1
-  scatterGroups:
-  - {fileID: 11400000, guid: eb30a9533689686499b697206515e129, type: 2}
-  patchScale: 1
-  treeDensity: 0
-  probabilityShift: 0
-  TreeScaleMin: 0.21
-  TreeScaleMax: 0.37
-  TreeHeightOffset: 0
-  mass: 5e+9
-  gravityFalloff: 1.2
+  planet: {fileID: 11400000, guid: 590cc06f3f012c24fb9176ccc65b6431, type: 2}
   spawnLocationObj: {fileID: 6935620266522486943, guid: 7baf9a4c54f478c49b6dcdee52cc56d4, type: 3}
+  id: 0
 --- !u!4 &861361042
 Transform:
   m_ObjectHideFlags: 0

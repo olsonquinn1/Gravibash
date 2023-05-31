@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using static UnityEngine.Mathf;
 using UnityEngine.Rendering.Universal;
+using System.Reflection;
 
 public class PlanetController : MonoBehaviour
 {
@@ -44,16 +45,31 @@ public class PlanetController : MonoBehaviour
     private float mass;
     private float gravityFalloff; //how distance affects gravity falloff: 0 = not at all, 2 = realistic
 
-    [SerializeField] PlanetObject planet;
+    [SerializeField] public PlanetObject planet;
 
     [Header("Multiplayer")]
     [SerializeField] GameObject spawnLocationObj;
     private List<GameObject> spawnLocations;
     private GameObject ScatterBase;
+    private GameObject spawnBase;
     private float sunAngle = 0;
 
     private float G = 6.67f * Pow(10, -6); // 6.67 x 10^-11 (adjusted to make lower mass values work better)
     private System.Random rand;
+
+    [HideInInspector] public int id;
+    private bool initialized = false;
+
+    //hack the 2d shadowcaster...
+    private ShadowCaster2D shadowCaster;
+    private static BindingFlags accessFlagsPrivate =
+        BindingFlags.NonPublic | BindingFlags.Instance;
+    private static FieldInfo meshField =
+        typeof(ShadowCaster2D).GetField("m_Mesh", accessFlagsPrivate);
+    private static FieldInfo shapePathField =
+        typeof(ShadowCaster2D).GetField("m_ShapePath", accessFlagsPrivate);
+    private static MethodInfo onEnableMethod =
+        typeof(ShadowCaster2D).GetMethod("OnEnable", accessFlagsPrivate);
     
     //returns gravity acceleration vector for given object position and mass from this planet
     public Vector2 gravVector(float x1, float y1, float m1) {
@@ -111,6 +127,14 @@ public class PlanetController : MonoBehaviour
         loadFromObject();
         UnityEngine.Random.InitState((int) Floor(seed));
         generatePlanetMesh(ref mf, ref pc);
+        updateShadowCasterCollider(vecArrayConvert(pc.GetPath(0)));
+    }
+
+    private Vector3[] vecArrayConvert(Vector2[] vec) {
+        Vector3[] newVec = new Vector3[vec.Length];
+        for(int i = 0; i < vec.Length; i++)
+            newVec[i] = new Vector3(vec[i].x, vec[i].y, 0);
+        return newVec;
     }
 
     private float randomFloat() {
@@ -143,7 +167,11 @@ public class PlanetController : MonoBehaviour
 
             if((probability>Rplacement)||false) {
                 Vector2 pos = colliderVertices[vertIndex];
-                Vector2 gravVec = gravVector(pos.x, pos.y, 10);
+                Vector2 gravVec = gravVector(
+                    pos.x + transform.position.x,
+                    pos.y + transform.position.y,
+                    10
+                );
                 float angle = Atan2(gravVec.y,gravVec.x)*180/Mathf.PI;
                 float acceleration = gravVec.magnitude;
                 gravVec.Normalize();
@@ -153,15 +181,20 @@ public class PlanetController : MonoBehaviour
 
                 Vector3 pos3 = new Vector3(pos.x,pos.y,10);
 
-                GameObject TempObj = Instantiate( //make tree
-                    chooseScatterFromGroup(0),
-                    pos3,
-                    Quaternion.Euler(new Vector3(0, 0, angle+90)),
-                    ScatterBase.transform
-                );
+                GameObject TempObj = Instantiate(chooseScatterFromGroup(0));
+                TempObj.transform.parent = ScatterBase.transform;
+                TempObj.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, angle+90));
+                TempObj.transform.localPosition = pos3;
                 TempObj.transform.localScale = treeScale;
             }
         }
+    }
+
+    private void updateShadowCasterCollider(Vector3[] path) {
+        shadowCaster = GetComponent<ShadowCaster2D>();
+        shapePathField.SetValue(shadowCaster, path);
+        meshField.SetValue(shadowCaster, null);
+        onEnableMethod.Invoke(shadowCaster, new object[0]);
     }
 
     GameObject chooseScatterFromGroup(int groupIndex) {
@@ -324,10 +357,14 @@ public class PlanetController : MonoBehaviour
         return spawnLocations[index].transform.position;
     }
 
-    void Start()
-    {
-        ScatterBase = new GameObject("ScatterBase");
-        ScatterBase.transform.SetParent(transform);
+    public void Init() {
+        ScatterBase = new GameObject("Scatter Base");
+        ScatterBase.transform.parent = transform;
+        ScatterBase.transform.localPosition = new Vector3(0, 0, 0);
+
+        spawnBase = new GameObject("Spawn Base");
+        spawnBase.transform.parent = transform;
+        spawnBase.transform.localPosition = new Vector3(0, 0, 0);
 
         //generate the planet's mesh / scatter
         updatePlanet();
@@ -338,11 +375,10 @@ public class PlanetController : MonoBehaviour
             Vector3 pos = (radius + 2.5f + scale) * new Vector3(
                 Cos(PI * 2 * ((float) i / 4)), Sin(PI * 2 * ((float) i / 4)), 0
             );
-            spawnLocations.Add(Instantiate(
-                spawnLocationObj,
-                pos,
-                transform.rotation
-            ));
+            GameObject spawn = Instantiate(spawnLocationObj);
+            spawn.transform.parent = spawnBase.transform;
+            spawn.transform.localPosition = pos;
+            spawnLocations.Add(spawn);
         }
 
         //create lighting
@@ -355,6 +391,6 @@ public class PlanetController : MonoBehaviour
             updatePlanet();
         }
         
-        updateLighting();
+        if(initialized) updateLighting();
     }
 }
