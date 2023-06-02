@@ -6,7 +6,7 @@ using static UnityEngine.Mathf;
 public class PlanetManager : MonoBehaviour
 {
 
-    [SerializeField] List<PlanetSceneObject> planets;
+    [SerializeField] public List<PlanetSceneObject> planets;
     [SerializeField] GameObject planetPrefab;
     private PlanetSceneObject[] sc;
     private GameObject[] obj;
@@ -38,8 +38,8 @@ public class PlanetManager : MonoBehaviour
             if(!p.isStatic) {
                 timing[id] = (p.offset) * p.period;
                 pObj.transform.position = new Vector3(
-                    p.majorAxis * Cos(PI * 2 * (p.offset * p.period)),
-                    p.minorAxis * Sin(PI * 2 * (p.offset * p.period)),
+                    p.origin.x + p.majorAxis * Cos((p.reverse ? -1 : 1) * PI * 2 * (p.offset * p.period)),
+                    p.origin.y + p.minorAxis * Sin((p.reverse ? -1 : 1) * PI * 2 * (p.offset * p.period)),
                     0
                 );
             }
@@ -50,7 +50,7 @@ public class PlanetManager : MonoBehaviour
 
     public Vector2 gravVectorSum(float x, float y, float m) {
         Vector2 sum = new Vector2(0, 0);
-        for(int i = 0; i < planets.Count; i++)
+        for(int i = 0; i < planets.Count; i++) if(ctrl[i] != null)
             sum += ctrl[i].gravVector(x, y, m);
         return sum;
     }
@@ -64,14 +64,19 @@ public class PlanetManager : MonoBehaviour
         for(int i = 0; i < planets.Count; i++) {
             if(!sc[i].isStatic) {
                 //translate planet along orbit path
+                Quaternion rot = Quaternion.AngleAxis(sc[i].rotation, Vector3.forward);
                 timing[i] += Time.deltaTime;
-                obj[i].transform.position = new Vector3(
-                    sc[i].majorAxis * Cos(PI * 2 * (timing[i] / sc[i].period)),
-                    sc[i].minorAxis * Sin(PI * 2 * (timing[i] / sc[i].period)),
+                obj[i].transform.position = rot * new Vector3(
+                    sc[i].origin.x + sc[i].majorAxis * Cos(PI * 2 * (timing[i] / sc[i].period)),
+                    sc[i].origin.y + sc[i].minorAxis * Sin(PI * 2 * (timing[i] / sc[i].period)),
                     0
                 );
             }
         }
+    }
+
+    void planetsInEditor() {
+
     }
 
     public void updateAllPlanetGen() {
@@ -80,16 +85,5 @@ public class PlanetManager : MonoBehaviour
         }
     }
 
-    private Vector3[] gizmosDrawEllipse(int resolution, PlanetSceneObject data) {
-        Vector3[] positions = new Vector3[resolution];
-        for(int i = 0; i < resolution; i++) {
-            float angle = (float) i / resolution * 2 * PI;
-            positions[i] = new Vector3(
-                data.majorAxis * Cos(angle) + data.origin.x,
-                data.minorAxis * Sin(angle) + data.origin.y,
-                0
-            );
-        }
-        return positions;
-    }
+    
 }

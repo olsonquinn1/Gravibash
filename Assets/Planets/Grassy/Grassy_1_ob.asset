@@ -16,11 +16,12 @@ MonoBehaviour:
   radius: 20
   segments: 200
   textureTiers: 3
-  uvWidth: 2
+  uvWidth: 3
   uvMirror: 1
-  heightPerLevel: 1.43
+  heightPerLevel: 1
   surfaceLevel: 1
   planetLighting: {fileID: 4404863688223244734, guid: 0f94cdbecc9b82a418be7494314c8ca5, type: 3}
+  shadowTrim: 1.59
   smoothness: 35.6
   minSmoothPercent: 9.9896
   smoothOffset: 10

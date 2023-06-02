@@ -102,26 +102,7 @@ public class Player : NetworkBehaviour
         CmdSetForward(_new);
     }
 
-    public override void OnStartLocalPlayer()
-    {
-        health = healthMax;
-        lookTransform = GameObject.Find("LookTransform").GetComponent<Transform>();
-        CinemachineVirtualCamera vcam = GameObject.Find("Virtual Camera").GetComponent<CinemachineVirtualCamera>();
-        vcam.Follow = lookTransform;
-        hudController = GameObject.Find("HUD").GetComponent<HudController>();
-        hudController.showNameChangeHud();
-        hudController.playerScript = gameObject.GetComponent<Player>();
-    }
-    
-    void Start() {
-        rb = transform.GetComponentInChildren<Rigidbody2D>();
-        model = transform.GetChild(1).gameObject;
-        rb.centerOfMass = new Vector2(0, -0.3f);
-        pm = GameObject.Find("PlanetManager").GetComponent<PlanetManager>();
-        //align player to gravity when spawned
-        alignToGravity();
-    }
-
+    //synced actions
     [Command]
     private void cmdShoot(Vector3 pos, Vector2 vel, float angle) {
         shoot(pos, vel, angle);
@@ -147,31 +128,7 @@ public class Player : NetworkBehaviour
             groundTiming = true;
         }
     }
-
-    void FixedUpdate() {
-        if(!isLocalPlayer) return;
-        if(left) rb.AddRelativeForce(Time.fixedDeltaTime * movePower * new Vector2(-1, 0));
-        if(right) rb.AddRelativeForce(Time.fixedDeltaTime * movePower * new Vector2(1, 0));
-        if(jump && jumpTimer >= jumpCooldown) {
-                rb.AddRelativeForce(jumpPower * new Vector2(0, 1));
-                jumpTimer = 0;
-        }
-
-        //gravity
-        Vector2 gVector = pm.gravVectorSum(
-            transform.position.x, transform.position.y, rb.mass
-        );
-
-        //adjust rotation to match gravity
-        Vector2 rotVec = new Vector2(Cos(rb.rotation * PI / 180), Sin(rb.rotation * PI / 180));
-        float offGravRot = Vector2.SignedAngle(
-            gVector,
-            rotVec
-        ) - 90;
-        rb.AddTorque(-15.0f * offGravRot * Time.fixedDeltaTime * healthMax / (health + 1/100000.0f));
-        rb.AddForce(Time.fixedDeltaTime * gVector);
-    }
-
+    
     private void alignToGravity() {
         rb.rotation -= Vector2.SignedAngle(
             pm.gravVectorSum(transform.position.x, transform.position.y, rb.mass),
@@ -244,5 +201,51 @@ public class Player : NetworkBehaviour
             setForward(true);
         }
         
+    }
+
+    void FixedUpdate() {
+        if(!isLocalPlayer) return;
+        if(left) rb.AddRelativeForce(Time.fixedDeltaTime * movePower * new Vector2(-1, 0));
+        if(right) rb.AddRelativeForce(Time.fixedDeltaTime * movePower * new Vector2(1, 0));
+        if(jump && jumpTimer >= jumpCooldown) {
+                rb.AddRelativeForce(jumpPower * new Vector2(0, 1));
+                jumpTimer = 0;
+        }
+
+        //gravity
+        Vector2 gVector = pm.gravVectorSum(
+            transform.position.x, transform.position.y, rb.mass
+        );
+
+        //adjust rotation to match gravity
+        Vector2 rotVec = new Vector2(Cos(rb.rotation * PI / 180), Sin(rb.rotation * PI / 180));
+        float offGravRot = Vector2.SignedAngle(
+            gVector,
+            rotVec
+        ) - 90;
+        rb.AddTorque(-15.0f * offGravRot * Time.fixedDeltaTime * healthMax / (health + 1/100000.0f));
+        rb.AddForce(Time.fixedDeltaTime * gVector);
+    }
+    
+    public override void OnStartLocalPlayer()
+    {
+        health = healthMax;
+        lookTransform = GameObject.Find("LookTransform").transform;
+        if(lookTransform == null) Debug.Log("e");
+        CinemachineVirtualCamera vcam = GameObject.Find("Virtual Camera").GetComponent<CinemachineVirtualCamera>();
+        if(vcam == null) Debug.Log("a");
+        vcam.Follow = lookTransform;
+        hudController = GameObject.Find("HUD").GetComponent<HudController>();
+        hudController.showNameChangeHud();
+        hudController.playerScript = gameObject.GetComponent<Player>();
+    }
+    
+    void Start() {
+        rb = transform.GetComponentInChildren<Rigidbody2D>();
+        model = transform.GetChild(1).gameObject;
+        rb.centerOfMass = new Vector2(0, -0.3f);
+        pm = GameObject.Find("PlanetManager").GetComponent<PlanetManager>();
+        //align player to gravity when spawned
+        alignToGravity();
     }
 }

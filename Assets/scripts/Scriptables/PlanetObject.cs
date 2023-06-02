@@ -17,6 +17,7 @@ public class PlanetObject : ScriptableObject
 
     [Header("Lighting")]
     [SerializeField] public GameObject planetLighting;
+    [SerializeField] public float shadowTrim;
 
     [Header("Terrain Generation")]
     [Min(0)] [SerializeField] public float smoothness = 35.6f;

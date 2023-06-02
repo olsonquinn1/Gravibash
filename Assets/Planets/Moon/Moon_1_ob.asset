@@ -21,10 +21,11 @@ MonoBehaviour:
   heightPerLevel: 1.25
   surfaceLevel: 1
   planetLighting: {fileID: 5100590338117472921, guid: e7018dc8f03f2c3489a9460dd09ff1e1, type: 3}
+  shadowTrim: 1.18
   smoothness: 21.9
   minSmoothPercent: 9.78
   smoothOffset: 4.41
-  scale: 1.45
+  scale: 2
   minScalePercent: 10
   scaleOffset: 0.06
   seed: 1.1
@@ -36,5 +37,5 @@ MonoBehaviour:
   TreeScaleMin: 0.2
   TreeScaleMax: 0.4
   TreeHeightOffset: 0
-  mass: 1e+9
+  mass: 2e+9
   gravityFalloff: 1.2

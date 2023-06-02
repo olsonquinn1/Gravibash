@@ -20,6 +20,7 @@ public class PlanetController : MonoBehaviour
 
     //Lighting
     private GameObject planetLighting;
+    private float shadowTrim;
     
     //terrain gen
     private float smoothness;
@@ -89,6 +90,8 @@ public class PlanetController : MonoBehaviour
         surfaceLevel = planet.surfaceLevel;
 
         planetLighting = planet.planetLighting;
+        shadowTrim = planet.shadowTrim;
+
         smoothness = planet.smoothness;
         minSmoothPercent = planet.minSmoothPercent;
         smoothOffset = planet.smoothOffset;
@@ -116,6 +119,7 @@ public class PlanetController : MonoBehaviour
         MeshFilter mf = transform.GetComponentInChildren<MeshFilter>();
         PolygonCollider2D pc = GetComponent<PolygonCollider2D>();
         loadFromObject();
+        GetComponent<ShadowCaster2D>().trimEdge = shadowTrim;
         GetComponentInChildren<MeshRenderer>().material = planet.planetMaterial;
         UnityEngine.Random.InitState((int) Floor(seed));
         generatePlanetMesh(ref mf, ref pc);
@@ -360,7 +364,7 @@ public class PlanetController : MonoBehaviour
         }
 
         //create lighting
-        if(planetLighting != null) Instantiate(planetLighting, transform);
+        Instantiate(planetLighting, transform);
     }
 
     void Update() {

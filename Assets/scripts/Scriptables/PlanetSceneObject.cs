@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlanetSceneObject", menuName = "Planet/New Planet Scene Object")]
+[ExecuteInEditMode]
 public class PlanetSceneObject : ScriptableObject
 {
 
@@ -27,5 +28,9 @@ public class PlanetSceneObject : ScriptableObject
     [SerializeField] public float rotation = 0;
     [SerializeField] public float period = 60;
     [SerializeField][Range(0, 1)] public float offset = 0;
+    [SerializeField] public bool reverse = false;
 
+    void update() {
+        if(minorAxis > majorAxis) minorAxis = majorAxis;
+    }
 }

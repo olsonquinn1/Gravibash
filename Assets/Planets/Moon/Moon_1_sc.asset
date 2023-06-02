@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planet: {fileID: 11400000, guid: 91fb42637e1b8eb449d779a4439c991d, type: 2}
   isStatic: 0
-  origin: {x: 0, y: 0, z: 0}
-  majorAxis: 35
-  minorAxis: 35
-  rotation: 0
-  period: 60
-  offset: 0.659
+  origin: {x: -2.5, y: 0, z: 0}
+  majorAxis: 44.7
+  minorAxis: 67.5
+  rotation: 53.9
+  period: 20
+  offset: 0.077
+  reverse: 0
