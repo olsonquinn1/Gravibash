@@ -46,6 +46,7 @@ public class PlanetManager : MonoBehaviour
             id++;
             newPlanetController.Init();
         }
+        GameObject.Find("HUD").GetComponent<HudController>().initPlanets(obj);
     }
 
     public Vector2 gravVectorSum(float x, float y, float m) {

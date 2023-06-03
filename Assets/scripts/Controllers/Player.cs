@@ -31,6 +31,7 @@ public class Player : NetworkBehaviour
     private Rigidbody2D rb;
     private Transform lookTransform;
     private GameObject model;
+    private GameObject background;
 
     //timers and ground detection
     private bool onGround = false;
@@ -155,6 +156,10 @@ public class Player : NetworkBehaviour
             alignToGravity();
         }
 
+        //move background to follow player
+        background.transform.position = transform.position * 0.8f;
+
+        //input
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         float mouseAngle = Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x);
         left = false;
@@ -230,14 +235,16 @@ public class Player : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         health = healthMax;
+
         lookTransform = GameObject.Find("LookTransform").transform;
-        if(lookTransform == null) Debug.Log("e");
         CinemachineVirtualCamera vcam = GameObject.Find("Virtual Camera").GetComponent<CinemachineVirtualCamera>();
-        if(vcam == null) Debug.Log("a");
         vcam.Follow = lookTransform;
+
         hudController = GameObject.Find("HUD").GetComponent<HudController>();
         hudController.showNameChangeHud();
         hudController.playerScript = gameObject.GetComponent<Player>();
+
+        background = GameObject.Find("Background");
     }
     
     void Start() {

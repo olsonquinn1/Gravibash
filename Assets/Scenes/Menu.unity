@@ -765,6 +765,7 @@ GameObject:
   - component: {fileID: 380558522}
   - component: {fileID: 380558521}
   - component: {fileID: 380558525}
+  - component: {fileID: 380558526}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -877,6 +878,18 @@ MonoBehaviour:
   quitBtn: {fileID: 1879063876}
   ip_input: {fileID: 1355330788}
   netMan: {fileID: 1893795384}
+--- !u!210 &380558526
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380558520}
+  m_Enabled: 1
+  m_SortingLayerID: 865640955
+  m_SortingLayer: 5
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!1 &566522504
 GameObject:
   m_ObjectHideFlags: 0

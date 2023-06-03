@@ -56,6 +56,8 @@ public class PlanetController : MonoBehaviour
     private GameObject spawnBase;
     private float sunAngle = 0;
 
+    [HideInInspector] public List<Vector2> surface;
+
     private float G = 6.67f * Pow(10, -6); // 6.67 x 10^-11 (adjusted to make lower mass values work better)
     private System.Random rand;
 
@@ -116,13 +118,20 @@ public class PlanetController : MonoBehaviour
     }
 
     public void updatePlanet() {
-        MeshFilter mf = transform.GetComponentInChildren<MeshFilter>();
-        PolygonCollider2D pc = GetComponent<PolygonCollider2D>();
+        
+
         loadFromObject();
+
         GetComponent<ShadowCaster2D>().trimEdge = shadowTrim;
         GetComponentInChildren<MeshRenderer>().material = planet.planetMaterial;
+
         UnityEngine.Random.InitState((int) Floor(seed));
+
+        MeshFilter mf = transform.GetComponentInChildren<MeshFilter>();
+        PolygonCollider2D pc = GetComponent<PolygonCollider2D>();
         generatePlanetMesh(ref mf, ref pc);
+        if(enableScatter && planet.scatterGroups.Count > 0)
+            generateSurfaceScatter(surface);
     }
 
     private float randomFloat() {
@@ -330,8 +339,7 @@ public class PlanetController : MonoBehaviour
         mesh.uv = uv.ToArray();
         mf.mesh = mesh;
         pc.SetPath(0, colliderVertices.ToArray());
-
-        if(enableScatter && planet.scatterGroups.Count > 0) generateSurfaceScatter(colliderVertices);
+        surface = colliderVertices;
     }
 
     public Vector3 getSpawnLocation() {
