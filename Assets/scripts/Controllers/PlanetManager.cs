@@ -37,6 +37,8 @@ public class PlanetManager : MonoBehaviour
             timing[id] = 0;
             if(!p.isStatic) {
                 timing[id] = (p.offset) * p.period;
+                obj[id].GetComponent<Rigidbody2D>().isKinematic = false;
+
                 pObj.transform.position = new Vector3(
                     p.origin.x + p.majorAxis * Cos((p.reverse ? -1 : 1) * PI * 2 * (p.offset * p.period)),
                     p.origin.y + p.minorAxis * Sin((p.reverse ? -1 : 1) * PI * 2 * (p.offset * p.period)),
@@ -64,13 +66,24 @@ public class PlanetManager : MonoBehaviour
     {
         for(int i = 0; i < planets.Count; i++) {
             if(!sc[i].isStatic) {
-                //translate planet along orbit path
                 Quaternion rot = Quaternion.AngleAxis(sc[i].rotation, Vector3.forward);
-                timing[i] += Time.deltaTime;
-                obj[i].transform.position = rot * new Vector3(
+                Vector3 currentPos = rot * new Vector3(
                     sc[i].origin.x + sc[i].majorAxis * Cos(PI * 2 * (timing[i] / sc[i].period)),
                     sc[i].origin.y + sc[i].minorAxis * Sin(PI * 2 * (timing[i] / sc[i].period)),
                     0
+                );
+                obj[i].GetComponent<Rigidbody2D>().MovePosition(currentPos);
+                timing[i] += Time.deltaTime;
+                Vector3 nextPos = rot * new Vector3(
+                    sc[i].origin.x + sc[i].majorAxis * Cos(PI * 2 * (timing[i] / sc[i].period)),
+                    sc[i].origin.y + sc[i].minorAxis * Sin(PI * 2 * (timing[i] / sc[i].period)),
+                    0
+                );
+                //set planet velocty
+                float angle = Atan2(nextPos.y - currentPos.y, nextPos.x - currentPos.x);
+                obj[i].GetComponent<Rigidbody2D>().velocity = new Vector3(
+                    Cos(angle),
+                    Sin(angle)
                 );
             }
         }

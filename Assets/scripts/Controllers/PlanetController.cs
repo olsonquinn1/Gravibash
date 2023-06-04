@@ -118,8 +118,7 @@ public class PlanetController : MonoBehaviour
     }
 
     public void updatePlanet() {
-        
-
+    
         loadFromObject();
 
         GetComponent<ShadowCaster2D>().trimEdge = shadowTrim;

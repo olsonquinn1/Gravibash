@@ -194,18 +194,6 @@ public class Player : NetworkBehaviour
             lookTransform.position = transform.position + (maxCameraDist * (lookTransform.position - transform.position).normalized);
         }
 
-        //mirror sprite depending on velocity
-        Vector2 rotVec = new Vector2(Cos(rb.rotation * PI / 180), Sin(rb.rotation * PI / 180));
-        float offVelRot = Vector2.Angle(
-            rb.velocity,
-            rotVec
-        );
-        if(offVelRot < 85 && rb.velocity.magnitude > 0.5f) {
-            setForward(false);
-        } else if(offVelRot > 95 && rb.velocity.magnitude > 0.5f) {
-            setForward(true);
-        }
-        
     }
 
     void FixedUpdate() {
@@ -224,12 +212,25 @@ public class Player : NetworkBehaviour
 
         //adjust rotation to match gravity
         Vector2 rotVec = new Vector2(Cos(rb.rotation * PI / 180), Sin(rb.rotation * PI / 180));
-        float offGravRot = Vector2.SignedAngle(
+        float offGravRot = Vector2.SignedAngle( //difference between player rotation and gravity
             gVector,
             rotVec
         ) - 90;
         rb.AddTorque(-15.0f * offGravRot * Time.fixedDeltaTime * healthMax / (health + 1/100000.0f));
         rb.AddForce(Time.fixedDeltaTime * gVector);
+
+        //mirror sprite depending on velocity vector offset to gravity vector
+        float gravVelRot = Vector2.Angle( //difference between player velocity and gravity
+            rb.velocity,
+            Quaternion.AngleAxis(90, Vector3.forward) * gVector
+        );
+
+        if(gravVelRot < 85 && rb.velocity.magnitude > 0.5f) {
+            setForward(false);
+        } else if(gravVelRot > 95 && rb.velocity.magnitude > 0.5f) {
+            setForward(true);
+        }
+        
     }
     
     public override void OnStartLocalPlayer()

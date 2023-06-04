@@ -37,5 +37,5 @@ MonoBehaviour:
   TreeScaleMin: 0.2
   TreeScaleMax: 0.4
   TreeHeightOffset: 0
-  mass: 2e+9
+  mass: 3e+9
   gravityFalloff: 1.2
