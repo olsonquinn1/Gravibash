@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26ad4ad4b6622374c8d64f8894509d32, type: 3}
-  m_Name: Laser Settings
+  m_Name: HeavyEgg Settiings
   m_EditorClassIdentifier: 
-  name: Laser
-  projectilePrefab: {fileID: 7241570874895928537, guid: a946f1cfc4cf22d4a90228ae6972112f, type: 3}
-  projectileBaseFireRate: 1
-  projectileBaseVel: 50
-  projectileBaseDamage: 50
-  projectileBaseAcc: 1
+  name: HeavyEgg
+  projectilePrefab: {fileID: 7445139758570961900, guid: dd90ea2aeb7802d43824a4dea6a2d356, type: 3}
+  projectileBaseFireRate: 2
+  projectileBaseVel: 20
+  projectileBaseDamage: 100
+  projectileBaseAcc: 5
   projectileBurstSize: 1
   projectileBurstRate: 1
-  reloadSize: 10
-  reloadTime: 5
-  projectileDragCoef: 0
-  projectileGravFactor: 0
+  reloadSize: 20
+  reloadTime: 4
+  projectileDragCoef: 1
+  projectileGravFactor: 1
   projectileThrustAccel: 0
   projectileTurnStrength: 0
   projectileTurnDamping: 0
-  projectileElacticity: 0
-  recoilForce: 0
-  recoilAimChange: 0
+  projectileElacticity: 0.5
+  recoilForce: 5
+  recoilAimChange: 5

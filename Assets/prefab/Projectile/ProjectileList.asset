@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a490cc35cdd9878489deb415f15fd873, type: 3}
   m_Name: ProjectileList
   m_EditorClassIdentifier: 
+  projList:
+  - {fileID: 11400000, guid: 7a27a071153e8864698607b6c2035298, type: 2}
