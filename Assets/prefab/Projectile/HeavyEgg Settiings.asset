@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ad4ad4b6622374c8d64f8894509d32, type: 3}
+  m_Name: HeavyEgg Settiings
+  m_EditorClassIdentifier: 
+  name: HeavyEgg
+  projectilePrefab: {fileID: 7445139758570961900, guid: dd90ea2aeb7802d43824a4dea6a2d356, type: 3}
+  projectileBaseFireRate: 2
+  projectileBaseVel: 20
+  projectileBaseDamage: 100
+  projectileBaseAcc: 5
+  projectileBurstSize: 1
+  projectileBurstRate: 1
+  reloadSize: 20
+  reloadTime: 4
+  projectileDragCoef: 1
+  projectileGravFactor: 1
+  projectileThrustAccel: 0
+  projectileTurnStrength: 0
+  projectileTurnDamping: 0
+  projectileElacticity: 0.5
+  recoilForce: 5
+  recoilAimChange: 5

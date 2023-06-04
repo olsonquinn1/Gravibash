@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 6243804813490303622}
   - component: {fileID: 4283433817364445402}
   m_Layer: 0
-  m_Name: Projectile
+  m_Name: HeavyEgg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
