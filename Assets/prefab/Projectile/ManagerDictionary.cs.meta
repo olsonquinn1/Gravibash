@@ -1,11 +1,9 @@
 fileFormatVersion: 2
-guid: 85146fd6cc82b8740bc348d62ca6bd90
+guid: a490cc35cdd9878489deb415f15fd873
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - ProjectileList: {fileID: 11400000, guid: 5429e372f65a6574db2b9801a9f11e05, type: 2}
-  - planetMan: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

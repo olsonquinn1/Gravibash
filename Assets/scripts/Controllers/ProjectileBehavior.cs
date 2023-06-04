@@ -6,6 +6,7 @@ using Mirror;
 
 public class ProjectileBehavior : NetworkBehaviour
 {
+    [SerializeField] ManagerDictionary ProjectileList;
     [HideInInspector] public PlanetManager planetMan;
 
     private float timeAlive = 0;
@@ -13,7 +14,10 @@ public class ProjectileBehavior : NetworkBehaviour
     public float lifeTime = 5;
     private Rigidbody2D rb;
 
-    public void Init(Vector3 initialPosition, Vector2 initialVelocity, float angle) {
+    //scriptable objects
+    private ProjectileManager ProjTypeManager;
+
+    public void Init(/*string projectileType*/Vector3 initialPosition, Vector2 initialVelocity, float angle) {
         planetMan = FindFirstObjectByType<PlanetManager>();
         rb.velocity = initialVelocity + ( speed * new Vector2(Cos(angle), Sin(angle)) );
         transform.position = initialPosition;
