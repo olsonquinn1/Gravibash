@@ -38,4 +38,4 @@ MonoBehaviour:
   TreeScaleMax: 0.4
   TreeHeightOffset: 0
   mass: 3e+9
-  gravityFalloff: 1.2
+  gravityFalloff: 1.6

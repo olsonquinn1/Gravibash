@@ -154,6 +154,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8f036d084e5d55740b3e176194949ad0, type: 2}
   - {fileID: 11400000, guid: 127fc6dce6988be4c9370eeda1acfed1, type: 2}
   planetPrefab: {fileID: 7485584536624539722, guid: bc74417b78e6425498c194a3cebcdff6, type: 3}
+  correctionPower: 1
+  editor: 1
 --- !u!4 &334119032
 Transform:
   m_ObjectHideFlags: 0

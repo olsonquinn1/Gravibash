@@ -178,18 +178,19 @@ public class PlanetController : MonoBehaviour
 
                 Vector3 pos3 = new Vector3(pos.x,pos.y,10);
 
-                GameObject TempObj = Instantiate(chooseScatterFromGroup(0));
+                ScatterObject so = chooseScatterObjectFromGroup(0);
+                GameObject TempObj = Instantiate(so.prefab);
                 TempObj.transform.parent = ScatterBase.transform;
                 TempObj.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, angle+90));
                 TempObj.transform.localPosition = pos3;
-                TempObj.transform.localScale = treeScale;
+                TempObj.transform.localScale = treeScale * so.scaleOffset;
             }
         }
     }
 
-    GameObject chooseScatterFromGroup(int groupIndex) {
+    ScatterObject chooseScatterObjectFromGroup(int groupIndex) {
         int index = UnityEngine.Random.Range(0, scatterGroups[groupIndex].items.Count);
-        return scatterGroups[groupIndex].items[index].prefab;
+        return scatterGroups[groupIndex].items[index];
     }
 
     void generatePlanetMesh(ref MeshFilter mf, ref PolygonCollider2D pc) {

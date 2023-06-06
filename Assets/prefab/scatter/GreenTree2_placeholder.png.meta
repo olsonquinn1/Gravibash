@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 0e890be255a61ab468effb2aaf53c0b8
+guid: 4af3fed5de2595744bb856f6f18e9bee
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1839782855543007658
-    second: icon1-01_0
-  - first:
-      213: 6169389602484394330
-    second: icon1-01_1
+      213: -4226048477400888494
+    second: GreenTree2_placeholder_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -101,13 +98,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: icon1-01_0
+      name: GreenTree2_placeholder_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 0
-        width: 3615
-        height: 956
+        x: 13
+        y: 6
+        width: 509
+        height: 2263
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,29 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: aa9ae7072c8388910800000000000000
-      internalID: 1839782855543007658
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: icon1-01_1
-      rect:
-        serializedVersion: 2
-        x: 4202
-        y: 0
-        width: 3611
-        height: 903
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a59121918231e9550800000000000000
-      internalID: 6169389602484394330
+      spriteID: 25b80f4ec4f0a55c0800000000000000
+      internalID: -4226048477400888494
       vertices: []
       indices: 
       edges: []
@@ -152,9 +128,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      icon1-01_0: 1839782855543007658
-      icon1-01_1: 6169389602484394330
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

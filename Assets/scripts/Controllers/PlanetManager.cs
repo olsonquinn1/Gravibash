@@ -12,6 +12,12 @@ public class PlanetManager : MonoBehaviour
     private GameObject[] obj;
     private PlanetController[] ctrl;
     private float[] timing;
+    private float[] perim;
+    [SerializeField] private bool editor = false;
+    /* private float testX;
+    private bool testXRev = false;
+    private float testY;
+    private bool testYRev = false; */
     
     // Start is called before the first frame update
     void Start()
@@ -21,6 +27,7 @@ public class PlanetManager : MonoBehaviour
         sc = new PlanetSceneObject[planets.Count];
         obj = new GameObject[planets.Count];
         timing = new float[planets.Count];
+        perim = new float[planets.Count];
         int id = 0;
         foreach(PlanetSceneObject p in planets) {
             GameObject pObj = Instantiate(
@@ -44,11 +51,17 @@ public class PlanetManager : MonoBehaviour
                     p.origin.y + p.minorAxis * Sin((p.reverse ? -1 : 1) * PI * 2 * (p.offset * p.period)),
                     0
                 );
+                //testX = pObj.transform.position.x;
+                //testY = pObj.transform.position.y;
             }
+
+            float h = Pow(p.majorAxis - p.minorAxis, 2) / Pow(p.majorAxis + p.minorAxis, 2);
+            perim[id] = PI * (p.majorAxis + p.minorAxis) * (1 + (3 * h) / (10 + Sqrt(4 - 3 * h)));
+
             id++;
             newPlanetController.Init();
         }
-        GameObject.Find("HUD").GetComponent<HudController>().initPlanets(obj);
+        if(!editor) GameObject.Find("HUD").GetComponent<HudController>().initPlanets(obj);
     }
 
     public Vector2 gravVectorSum(float x, float y, float m) {
@@ -61,30 +74,50 @@ public class PlanetManager : MonoBehaviour
     public Vector3 getSpawnLocation() {
         return ctrl[0].getSpawnLocation();
     }
-
-    void Update()
-    {
+    void FixedUpdate() {
         for(int i = 0; i < planets.Count; i++) {
             if(!sc[i].isStatic) {
+                Rigidbody2D rb = obj[i].GetComponent<Rigidbody2D>();
                 Quaternion rot = Quaternion.AngleAxis(sc[i].rotation, Vector3.forward);
-                Vector3 currentPos = rot * new Vector3(
-                    sc[i].origin.x + sc[i].majorAxis * Cos(PI * 2 * (timing[i] / sc[i].period)),
-                    sc[i].origin.y + sc[i].minorAxis * Sin(PI * 2 * (timing[i] / sc[i].period)),
+                rb.velocity = rot * new Vector3(
+                    sc[i].majorAxis * -2.0f * PI * Sin(PI * 2.0f * timing[i] / sc[i].period) / sc[i].period,
+                    sc[i].minorAxis * 2.0f * PI * Cos(PI * 2.0f * timing[i] / sc[i].period) / sc[i].period
+                );
+                Vector2 posOffset = rot * new Vector3(
+                    (sc[i].origin.x + sc[i].majorAxis * Cos(PI * 2 * (timing[i] / sc[i].period))) - obj[i].transform.position.x,
+                    (sc[i].origin.y + sc[i].minorAxis * Sin(PI * 2 * (timing[i] / sc[i].period))) - obj[i].transform.position.y,
                     0
                 );
-                obj[i].GetComponent<Rigidbody2D>().MovePosition(currentPos);
-                timing[i] += Time.deltaTime;
-                Vector3 nextPos = rot * new Vector3(
-                    sc[i].origin.x + sc[i].majorAxis * Cos(PI * 2 * (timing[i] / sc[i].period)),
-                    sc[i].origin.y + sc[i].minorAxis * Sin(PI * 2 * (timing[i] / sc[i].period)),
-                    0
-                );
-                //set planet velocty
-                float angle = Atan2(nextPos.y - currentPos.y, nextPos.x - currentPos.x);
-                obj[i].GetComponent<Rigidbody2D>().velocity = new Vector3(
-                    Cos(angle),
-                    Sin(angle)
-                );
+                rb.velocity += posOffset;
+                timing[i] += Time.fixedDeltaTime;
+                /* if(!testXRev) {
+                    if(obj[i].transform.position.x < testX) testX = obj[i].transform.position.x;
+                    else {
+                        Debug.Log("minX: " + testX);
+                        testXRev = true;
+                    }
+                } else {
+                    if(obj[i].transform.position.x > testX) testX = obj[i].transform.position.x;
+                    else {
+                        Debug.Log("maxX: " + testX);
+                        testXRev = false;
+                    }
+                }
+                if(!testYRev) {
+                    if(obj[i].transform.position.y < testY) testY = obj[i].transform.position.y;
+                    else {
+                        Debug.Log("minY: " + testY);
+                        testYRev = true;
+                    }
+                } else {
+                    if(obj[i].transform.position.y > testY) testY = obj[i].transform.position.y;
+                    else {
+                        Debug.Log("maxY: " + testY);
+                        testYRev = false;
+                    }
+                } */
+                
+                //Debug.DrawLine(obj[i].transform.position, obj[i].transform.position + Time.fixedDeltaTime * new Vector3(rb.velocity.x, rb.velocity.y), Color.green, 60);
             }
         }
     }

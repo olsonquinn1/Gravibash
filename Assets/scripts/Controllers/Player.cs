@@ -13,6 +13,7 @@ public class Player : NetworkBehaviour
     private PlanetManager pm;
     [SerializeField] private float movePower = 1250;
     [SerializeField] private float jumpPower = 750;
+    [SerializeField] private float jetPackPower = 50;
 
     [Header("Projectile")]
     [SerializeField] GameObject projectilePrefab;
@@ -32,6 +33,7 @@ public class Player : NetworkBehaviour
     private Transform lookTransform;
     private GameObject model;
     private GameObject background;
+    private ParticleSystem ps;
 
     //timers and ground detection
     private bool onGround = false;
@@ -45,7 +47,8 @@ public class Player : NetworkBehaviour
     //input
     private bool left = false;
     private bool right = false;
-    private bool jump = false;
+    private bool down = false;
+    private bool up = false;
 
     //synced variables
     [SyncVar(hook = nameof(OnHealthChanged))]
@@ -144,9 +147,6 @@ public class Player : NetworkBehaviour
         }
         if(!onGround) offGroundTimer += Time.deltaTime;
 
-        bool w = Input.GetKey(KeyCode.W);
-        bool a = Input.GetKey(KeyCode.A);
-        bool d = Input.GetKey(KeyCode.D);
         bool fire = Input.GetKeyDown(KeyCode.Space);
 
         if(Input.GetKeyDown(KeyCode.R)) {
@@ -164,17 +164,17 @@ public class Player : NetworkBehaviour
         float mouseAngle = Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x);
         left = false;
         right = false;
-        jump = false;
-        if(onGround) {
-            if(a) left = true;
-            if(d) right = true;
-            if(w) jump = true;
-            if(groundTiming) {
-                offGroundTimer -= Time.deltaTime;
-                if(offGroundTimer <= 0) {
-                    onGround = false;
-                    groundTiming = false;
-                }
+        up = false;
+        down = false;
+        if(Input.GetKey(KeyCode.A)) left = true;
+        if(Input.GetKey(KeyCode.D)) right = true;
+        if(Input.GetKey(KeyCode.W)) up = true;
+        if(Input.GetKey(KeyCode.S)) down = true;
+        if(onGround && groundTiming) {
+            offGroundTimer -= Time.deltaTime;
+            if(offGroundTimer <= 0) {
+                onGround = false;
+                groundTiming = false;
             }
         }
         
@@ -198,11 +198,29 @@ public class Player : NetworkBehaviour
 
     void FixedUpdate() {
         if(!isLocalPlayer) return;
-        if(left) rb.AddRelativeForce(Time.fixedDeltaTime * movePower * new Vector2(-1, 0));
-        if(right) rb.AddRelativeForce(Time.fixedDeltaTime * movePower * new Vector2(1, 0));
-        if(jump && jumpTimer >= jumpCooldown) {
-                rb.AddRelativeForce(jumpPower * new Vector2(0, 1));
-                jumpTimer = 0;
+        ParticleSystem.EmissionModule em = ps.emission;
+        if(onGround) {
+            em.enabled = false;
+            if(left) rb.AddRelativeForce(Time.fixedDeltaTime * movePower * new Vector2(-1, 0));
+            if(right) rb.AddRelativeForce(Time.fixedDeltaTime * movePower * new Vector2(1, 0));
+            if(up && jumpTimer >= jumpCooldown) {
+                    rb.AddRelativeForce(jumpPower * new Vector2(0, 1));
+                    jumpTimer = 0;
+            }
+        } else { //jetpack
+            
+            ParticleSystem.ShapeModule sm = ps.shape;
+            Vector2 jetDir = new Vector2(0,0);
+            if(left) jetDir.x -= 1;
+            if(right) jetDir.x += 1;
+            if(up) jetDir.y += 1;
+            if(down) jetDir.y -= 1;
+            if(jetDir.x != 0 || jetDir.y != 0) {
+                em.enabled = true;
+            }
+            else em.enabled = false;
+            sm.rotation = new Vector3(0, 0, 180.0f / PI * Atan2(jetDir.y, jetDir.x) - 180);
+            rb.AddRelativeForce(Time.fixedDeltaTime * jetPackPower * jetDir);
         }
 
         //gravity
@@ -222,7 +240,7 @@ public class Player : NetworkBehaviour
         //mirror sprite depending on velocity vector offset to gravity vector
         float gravVelRot = Vector2.Angle( //difference between player velocity and gravity
             rb.velocity,
-            Quaternion.AngleAxis(90, Vector3.forward) * gVector
+            gVector
         );
 
         if(gravVelRot < 85 && rb.velocity.magnitude > 0.5f) {
@@ -246,6 +264,8 @@ public class Player : NetworkBehaviour
         hudController.playerScript = gameObject.GetComponent<Player>();
 
         background = GameObject.Find("Background");
+
+        ps = transform.GetComponentInChildren<ParticleSystem>();
     }
     
     void Start() {

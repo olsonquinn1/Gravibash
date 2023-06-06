@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74817421020f4ee47b54b4f26d919e1d, type: 3}
   m_Name: Default Planet 1
   m_EditorClassIdentifier: 
+  planetMaterial: {fileID: 0}
   radius: 20
   segments: 226
   textureTiers: 3
@@ -20,6 +21,7 @@ MonoBehaviour:
   heightPerLevel: 1.9
   surfaceLevel: 1
   planetLighting: {fileID: 4404863688223244734, guid: 0f94cdbecc9b82a418be7494314c8ca5, type: 3}
+  shadowTrim: 0
   smoothness: 63.4
   minSmoothPercent: 7.02
   smoothOffset: 11.12
@@ -30,8 +32,8 @@ MonoBehaviour:
   enableScatter: 1
   scatterGroups:
   - {fileID: 11400000, guid: eb30a9533689686499b697206515e129, type: 2}
-  patchScale: 1
-  treeDensity: 0
+  patchScale: 3.28
+  treeDensity: 3.35
   probabilityShift: -1.31
   TreeScaleMin: 0.29
   TreeScaleMax: 0.5

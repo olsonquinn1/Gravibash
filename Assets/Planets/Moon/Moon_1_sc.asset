@@ -15,8 +15,8 @@ MonoBehaviour:
   planet: {fileID: 11400000, guid: 91fb42637e1b8eb449d779a4439c991d, type: 2}
   isStatic: 0
   origin: {x: 0, y: 0, z: 0}
-  majorAxis: 37
-  minorAxis: 37
+  majorAxis: 60
+  minorAxis: 45
   rotation: 0
   period: 60
   offset: 0
