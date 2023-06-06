@@ -31,6 +31,7 @@ public class HudController : MonoBehaviour
 
     void Update() {
         if(initialized) {
+            if(mm_player == null) return;
             mm_player.transform.localPosition = 
                 new Vector3(
                     playerScript.gameObject.transform.position.x * mm_scale,

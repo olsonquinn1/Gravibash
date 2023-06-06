@@ -49,6 +49,7 @@ public class Player : NetworkBehaviour
     private bool right = false;
     private bool down = false;
     private bool up = false;
+    private bool jet = false;
 
     //synced variables
     [SyncVar(hook = nameof(OnHealthChanged))]
@@ -145,9 +146,13 @@ public class Player : NetworkBehaviour
         if(!isLocalPlayer) {
             return;
         }
-        if(!onGround) offGroundTimer += Time.deltaTime;
 
-        bool fire = Input.GetKeyDown(KeyCode.Space);
+        bool fire = Input.GetMouseButton(0);
+        left = Input.GetKey(KeyCode.A);
+        right = Input.GetKey(KeyCode.D);
+        up = Input.GetKey(KeyCode.W);
+        down = Input.GetKey(KeyCode.S);
+        jet = Input.GetKey(KeyCode.Space);
 
         if(Input.GetKeyDown(KeyCode.R)) {
             changeHealth(healthMax);
@@ -162,15 +167,9 @@ public class Player : NetworkBehaviour
         //input
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         float mouseAngle = Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x);
-        left = false;
-        right = false;
-        up = false;
-        down = false;
-        if(Input.GetKey(KeyCode.A)) left = true;
-        if(Input.GetKey(KeyCode.D)) right = true;
-        if(Input.GetKey(KeyCode.W)) up = true;
-        if(Input.GetKey(KeyCode.S)) down = true;
-        if(onGround && groundTiming) {
+
+        if(!onGround) offGroundTimer += Time.deltaTime;
+        else if(groundTiming) {
             offGroundTimer -= Time.deltaTime;
             if(offGroundTimer <= 0) {
                 onGround = false;
@@ -207,7 +206,7 @@ public class Player : NetworkBehaviour
                     rb.AddRelativeForce(jumpPower * new Vector2(0, 1));
                     jumpTimer = 0;
             }
-        } else { //jetpack
+        } else if(jet){ //jetpack
             
             ParticleSystem.ShapeModule sm = ps.shape;
             Vector2 jetDir = new Vector2(0,0);
@@ -219,8 +218,14 @@ public class Player : NetworkBehaviour
                 em.enabled = true;
             }
             else em.enabled = false;
-            sm.rotation = new Vector3(0, 0, 180.0f / PI * Atan2(jetDir.y, jetDir.x) - 180);
+            Vector3 jetDesiredRot = 5.0f * new Vector3(0, 0, 180.0f / PI * Atan2(jetDir.y, jetDir.x) - 180);
+            Vector3 smRot = 5.0f * new Vector3(Cos(sm.rotation.z * PI / 180.0f), Sin(sm.rotation.z * PI / 180.0f));
+            float jetAngleDiff = Vector2.SignedAngle(smRot, jetDesiredRot);
+            float correctionSpeed = 20.0f;
+            sm.rotation = new Vector3(0, 0, sm.rotation.z + (jetAngleDiff / 180.0f) * correctionSpeed);
             rb.AddRelativeForce(Time.fixedDeltaTime * jetPackPower * jetDir);
+        } else {
+            em.enabled = false;
         }
 
         //gravity

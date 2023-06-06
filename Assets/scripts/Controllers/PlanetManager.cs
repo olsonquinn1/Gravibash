@@ -12,7 +12,8 @@ public class PlanetManager : MonoBehaviour
     private GameObject[] obj;
     private PlanetController[] ctrl;
     private float[] timing;
-    private float[] perim;
+    private float[] velNorm;
+    private float[] velAngle;
     [SerializeField] private bool editor = false;
     /* private float testX;
     private bool testXRev = false;
@@ -27,7 +28,8 @@ public class PlanetManager : MonoBehaviour
         sc = new PlanetSceneObject[planets.Count];
         obj = new GameObject[planets.Count];
         timing = new float[planets.Count];
-        perim = new float[planets.Count];
+        velNorm = new float[planets.Count];
+        velAngle = new float[planets.Count];
         int id = 0;
         foreach(PlanetSceneObject p in planets) {
             GameObject pObj = Instantiate(
@@ -55,8 +57,9 @@ public class PlanetManager : MonoBehaviour
                 //testY = pObj.transform.position.y;
             }
 
-            float h = Pow(p.majorAxis - p.minorAxis, 2) / Pow(p.majorAxis + p.minorAxis, 2);
-            perim[id] = PI * (p.majorAxis + p.minorAxis) * (1 + (3 * h) / (10 + Sqrt(4 - 3 * h)));
+            velNorm[id] = sc[id].majorAxis * 2.0f * PI / sc[id].period;
+            
+            velAngle[id] = PI * 2.0f / sc[id].period;
 
             id++;
             newPlanetController.Init();
@@ -79,48 +82,50 @@ public class PlanetManager : MonoBehaviour
             if(!sc[i].isStatic) {
                 Rigidbody2D rb = obj[i].GetComponent<Rigidbody2D>();
                 Quaternion rot = Quaternion.AngleAxis(sc[i].rotation, Vector3.forward);
+                float velMagX = -1.0f * Sin( velAngle[i] * timing[i] );
+                float velMagY = Cos( velAngle[i] * timing[i] ) ;
                 rb.velocity = rot * new Vector3(
-                    sc[i].majorAxis * -2.0f * PI * Sin(PI * 2.0f * timing[i] / sc[i].period) / sc[i].period,
-                    sc[i].minorAxis * 2.0f * PI * Cos(PI * 2.0f * timing[i] / sc[i].period) / sc[i].period
+                     velNorm[i] * velMagX,
+                     velNorm[i] * velMagY
                 );
                 Vector2 posOffset = rot * new Vector3(
-                    (sc[i].origin.x + sc[i].majorAxis * Cos(PI * 2 * (timing[i] / sc[i].period))) - obj[i].transform.position.x,
-                    (sc[i].origin.y + sc[i].minorAxis * Sin(PI * 2 * (timing[i] / sc[i].period))) - obj[i].transform.position.y,
+                    sc[i].origin.x + sc[i].majorAxis * velMagX - obj[i].transform.position.x,
+                    sc[i].origin.y + sc[i].minorAxis * velMagY - obj[i].transform.position.y,
                     0
                 );
                 rb.velocity += posOffset;
                 timing[i] += Time.fixedDeltaTime;
-                /* if(!testXRev) {
-                    if(obj[i].transform.position.x < testX) testX = obj[i].transform.position.x;
-                    else {
-                        Debug.Log("minX: " + testX);
-                        testXRev = true;
-                    }
-                } else {
-                    if(obj[i].transform.position.x > testX) testX = obj[i].transform.position.x;
-                    else {
-                        Debug.Log("maxX: " + testX);
-                        testXRev = false;
-                    }
-                }
-                if(!testYRev) {
-                    if(obj[i].transform.position.y < testY) testY = obj[i].transform.position.y;
-                    else {
-                        Debug.Log("minY: " + testY);
-                        testYRev = true;
-                    }
-                } else {
-                    if(obj[i].transform.position.y > testY) testY = obj[i].transform.position.y;
-                    else {
-                        Debug.Log("maxY: " + testY);
-                        testYRev = false;
-                    }
-                } */
-                
-                //Debug.DrawLine(obj[i].transform.position, obj[i].transform.position + Time.fixedDeltaTime * new Vector3(rb.velocity.x, rb.velocity.y), Color.green, 60);
             }
         }
     }
+    /* if(!testXRev) {
+        if(obj[i].transform.position.x < testX) testX = obj[i].transform.position.x;
+        else {
+            Debug.Log("minX: " + testX);
+            testXRev = true;
+        }
+    } else {
+        if(obj[i].transform.position.x > testX) testX = obj[i].transform.position.x;
+        else {
+            Debug.Log("maxX: " + testX);
+            testXRev = false;
+        }
+    }
+    if(!testYRev) {
+        if(obj[i].transform.position.y < testY) testY = obj[i].transform.position.y;
+        else {
+            Debug.Log("minY: " + testY);
+            testYRev = true;
+        }
+    } else {
+        if(obj[i].transform.position.y > testY) testY = obj[i].transform.position.y;
+        else {
+            Debug.Log("maxY: " + testY);
+            testYRev = false;
+        }
+    } */
+    
+    //Debug.DrawLine(obj[i].transform.position, obj[i].transform.position + Time.fixedDeltaTime * new Vector3(rb.velocity.x, rb.velocity.y), Color.green, 60);
 
     void planetsInEditor() {
 
