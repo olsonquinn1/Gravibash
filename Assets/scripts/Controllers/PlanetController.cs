@@ -81,6 +81,23 @@ public class PlanetController : NetworkBehaviour
         );
     }
 
+    public float LocalDensity(float x1, float y1) {
+        float e = MathF.E;
+
+        float SurfacePressure = 1;
+        float DensityFactor = 1;
+        float MaxAtmoHeight = radius*0.7f;
+
+        float CurrRadius = Sqrt(
+            Pow(transform.position.x - x1, 2) + Pow(transform.position.y - y1, 2)
+        );
+        float Density = CurrRadius>MaxAtmoHeight
+            ? 0
+            : (SurfacePressure * (Pow(e,-(CurrRadius-radius)*DensityFactor*G*mass)-Pow(e,-MaxAtmoHeight*DensityFactor*G*mass))
+                /(1.0f-Pow(e,-MaxAtmoHeight*DensityFactor*G*mass)));
+        return Density;
+    }
+
     private void loadFromObject() {
         planetMaterial = planet.planetMaterial;
         radius = planet.radius;

@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      GreenTree3_placeholder_normalpaint1_0: -3984415649725153172
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -138,5 +138,10 @@ public class PlanetManager : MonoBehaviour
         }
     }
 
-    
+    public float atmoDensity(float x, float y) {
+        float DensitySum = 0;
+        for(int i = 0; i < planets.Count; i++) if(ctrl[i] != null)
+            DensitySum += ctrl[i].LocalDensity(x, y);
+        return DensitySum;
+    }
 }

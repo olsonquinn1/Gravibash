@@ -11,7 +11,7 @@ public class ManagerDictionary : ScriptableObject
     {
         foreach (ProjectileManager Settings in projList)
         {
-            if(projType.Equals(Settings.name))
+            if(projType.Equals(Settings.TypeName))
                 return Settings;
         }
         return null;

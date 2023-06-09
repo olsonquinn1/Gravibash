@@ -32,6 +32,11 @@ public class Player : NetworkBehaviour
     [SerializeField] GameObject healthFill;
     [SerializeField] float healthMax = 100;
     [SerializeField] GameObject debugLinePrefab;
+
+    [SerializeField] ManagerDictionary ProjectileDictionary;
+    private ProjectileManager projectileProperties;
+    public string projType = "HeavyEgg";
+
     
     //misc cache
     private Rigidbody2D rb;
@@ -119,13 +124,14 @@ public class Player : NetworkBehaviour
     //synced actions
     [Command]
     private void cmdShoot(Vector3 pos, Vector2 vel, float angle) {
+        angle = angle + projectileProperties.projectileBaseAcc*UnityEngine.Random.Range(-1.0f,1.0f);
         shoot(pos, vel, angle);
     }
 
     [ClientRpc]
     private void shoot(Vector3 pos, Vector2 vel, float angle) {
         GameObject projObj = Instantiate(projectilePrefab);
-        projObj.GetComponent<ProjectileBehavior>().Init(pos, vel, angle);
+        projObj.GetComponent<ProjectileBehavior>().Init(projectileProperties, pos, vel, angle);
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), projObj.GetComponent<Collider2D>());
     }
 
@@ -353,6 +359,9 @@ public class Player : NetworkBehaviour
 
     void Awake() {
         debugLines = new List<LineRenderer>();
+        projectileProperties = ProjectileDictionary.loadProperties(projType);
+        projectilePrefab = projectileProperties.projectilePrefab; 
+        Debug.Log("UrMom");
     }
 
     void Start() {

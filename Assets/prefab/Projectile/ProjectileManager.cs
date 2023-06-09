@@ -5,19 +5,20 @@ using UnityEngine;
 [CreateAssetMenu]
 public class ProjectileManager : ScriptableObject
 {
-    public string name;
+    public string TypeName;
     public GameObject projectilePrefab;
 
     //prefab properties 
-    //time between shots
-    public int projectileBaseFireRate;
-    //Vel of projectile just shot
-    public int projectileBaseVel;
+    //time between shots in seconds
+    public float projectileBaseFireRate;
+    //Vel of projectile just shot in u/s
+    public float projectileBaseVel;
     //Dmg calculated using Dmg=Vel^2*BaseDmg/(BaseVel^2)
     //--Vel calculated using the sum of the player and character vel vectors
     public int projectileBaseDamage;
     //projectile standard dev in deg
     public float projectileBaseAcc;
+    //number of projectiles per burst
     public int projectileBurstSize;
     //burst fire rate as percent of minimum fire time
     public float projectileBurstRate;
@@ -29,7 +30,7 @@ public class ProjectileManager : ScriptableObject
 
     //factor of (m/s)/s lost based on current speed aka looping differential eqn
     public int projectileDragCoef;
-    //controlls the acceleration added by gravity vector
+    //controlls the acceleration added by gravity vector 1.0 means the normal accel of planet
     public float projectileGravFactor;
     //projectiles own forward propultion
     public float projectileThrustAccel;

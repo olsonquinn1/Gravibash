@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ad4ad4b6622374c8d64f8894509d32, type: 3}
   m_Name: Laser Settings
   m_EditorClassIdentifier: 
-  name: Laser
+  TypeName: Laser
   projectilePrefab: {fileID: 7241570874895928537, guid: a946f1cfc4cf22d4a90228ae6972112f, type: 3}
   projectileBaseFireRate: 1
   projectileBaseVel: 50

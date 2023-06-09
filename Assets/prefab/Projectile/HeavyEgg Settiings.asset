@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ad4ad4b6622374c8d64f8894509d32, type: 3}
   m_Name: HeavyEgg Settiings
   m_EditorClassIdentifier: 
-  name: HeavyEgg
+  TypeName: HeavyEgg
   projectilePrefab: {fileID: 7445139758570961900, guid: dd90ea2aeb7802d43824a4dea6a2d356, type: 3}
   projectileBaseFireRate: 2
   projectileBaseVel: 20
