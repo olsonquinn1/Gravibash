@@ -124,7 +124,7 @@ public class Player : NetworkBehaviour
     //synced actions
     [Command]
     private void cmdShoot(Vector3 pos, Vector2 vel, float angle) {
-        angle = angle + projectileProperties.projectileBaseAcc*UnityEngine.Random.Range(-1.0f,1.0f);
+        angle = angle + projectileProperties.projectileBaseAcc*UnityEngine.Random.Range(-1.0f,1.0f) * PI / 180;
         shoot(pos, vel, angle);
     }
 
