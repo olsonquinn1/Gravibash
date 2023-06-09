@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: 56ae59fe71659aa498876126114e8c82
+guid: 4947f2de38d3268468436447ea0559b8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4612020183524775666
-    second: GreenTree3_placeholder_normalmap2_0
+      213: -3984415649725153172
+    second: GreenTree3_placeholder_normalpaint1_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
-    sRGBTexture: 0
+    enableMipMap: 0
+    sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
     borderMipMap: 0
@@ -55,9 +55,9 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 0
+  alphaIsTransparency: 1
   spriteTessellationDetail: -1
-  textureType: 1
+  textureType: 8
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -98,13 +98,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GreenTree3_placeholder_normalmap2_0
+      name: GreenTree3_placeholder_normalpaint1_0
       rect:
         serializedVersion: 2
-        x: 9
+        x: 11
         y: 12
-        width: 888
-        height: 1368
+        width: 885
+        height: 1369
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,8 +112,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2f61defdbef210040800000000000000
-      internalID: 4612020183524775666
+      spriteID: c6000a0b31384b8c0800000000000000
+      internalID: -3984415649725153172
       vertices: []
       indices: 
       edges: []

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Mathf;
+using Mirror;
 
 public class PlanetManager : MonoBehaviour
 {
@@ -74,8 +75,12 @@ public class PlanetManager : MonoBehaviour
         return sum;
     }
 
+    Vector2 getVel(int planetId) {
+        return obj[planetId].GetComponent<Rigidbody2D>().velocity;
+    }
+
     public Vector3 getSpawnLocation() {
-        return ctrl[0].getSpawnLocation();
+        return ctrl[UnityEngine.Random.Range(0, ctrl.Length)].getSpawnLocation();
     }
     void FixedUpdate() {
         for(int i = 0; i < planets.Count; i++) {
@@ -126,10 +131,6 @@ public class PlanetManager : MonoBehaviour
     } */
     
     //Debug.DrawLine(obj[i].transform.position, obj[i].transform.position + Time.fixedDeltaTime * new Vector3(rb.velocity.x, rb.velocity.y), Color.green, 60);
-
-    void planetsInEditor() {
-
-    }
 
     public void updateAllPlanetGen() {
         for(int i = 0; i < planets.Count; i++) {

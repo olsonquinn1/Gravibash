@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -1868207213553890277}
   - component: {fileID: -3703837004322721401}
   - component: {fileID: 5471472934175982619}
+  - component: {fileID: 7453190168568878082}
   m_Layer: 0
   m_Name: PlanetPrefab
   m_TagString: planet
@@ -168,8 +169,8 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
+      m_Center: {x: 0, y: 0.09549713, z: 0}
+      m_Extent: {x: 0.9510498, y: 0.90450287, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
@@ -232,6 +233,29 @@ MonoBehaviour:
   positionPrecision: 0.0001
   scalePrecision: 0.01
   timelineOffset: 0
+--- !u!114 &7453190168568878082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7485584536624539722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab2cbc52526ea384ba280d13cd1a57b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 7485584536624539767}
+  clientAuthority: 0
+  syncVelocity: 1
+  clearVelocity: 0
+  velocitySensitivity: 0.01
+  syncAngularVelocity: 0
+  clearAngularVelocity: 0
+  angularVelocitySensitivity: 0.1
 --- !u!1 &7485584537038969390
 GameObject:
   m_ObjectHideFlags: 0

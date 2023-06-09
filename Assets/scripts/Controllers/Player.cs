@@ -8,12 +8,15 @@ using TMPro;
 
 public class Player : NetworkBehaviour
 {
-    
+
+    //fields    
     [Header("Physics")]
     private PlanetManager pm;
     [SerializeField] private float movePower = 1250;
     [SerializeField] private float jumpPower = 750;
     [SerializeField] private float jetPackPower = 50;
+    [SerializeField] private float jetCorrectionRate = 100;
+    [SerializeField] private LineRenderer pathRenderer;
 
     [Header("Projectile")]
     [SerializeField] GameObject projectilePrefab;
@@ -28,12 +31,18 @@ public class Player : NetworkBehaviour
     [SerializeField] GameObject floatingInfo;
     [SerializeField] GameObject healthFill;
     [SerializeField] float healthMax = 100;
+    [SerializeField] GameObject debugLinePrefab;
     
+    //misc cache
     private Rigidbody2D rb;
     private Transform lookTransform;
     private GameObject model;
     private GameObject background;
     private ParticleSystem ps;
+    private TMP_Text debugText;
+    private PlanetController currentPlanet;
+    private int debugLineIndex = 0;
+    private List<LineRenderer> debugLines;
 
     //timers and ground detection
     private bool onGround = false;
@@ -120,6 +129,7 @@ public class Player : NetworkBehaviour
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), projObj.GetComponent<Collider2D>());
     }
 
+    //collisions
     private void OnCollisionEnter2D(Collision2D collision) {
         if(collision.gameObject.CompareTag("planet")) {
             onGround = true;
@@ -134,6 +144,7 @@ public class Player : NetworkBehaviour
         }
     }
     
+    //util
     private void alignToGravity() {
         rb.rotation -= Vector2.SignedAngle(
             pm.gravVectorSum(transform.position.x, transform.position.y, rb.mass),
@@ -141,12 +152,30 @@ public class Player : NetworkBehaviour
         ) - 90;
     }
 
+    private Vector3 v2to3(Vector2 v2) {
+        return v2;
+    }
+
+    private void drawDebugLine(Vector3 a, Vector3 b, Color c) {
+        if(debugLines.Count - 1 < debugLineIndex) {
+            GameObject lrObj = Instantiate(debugLinePrefab);
+            lrObj.transform.SetParent(transform);
+            LineRenderer lr = lrObj.GetComponent<LineRenderer>();
+            debugLines.Add(lr);
+        }
+        debugLines[debugLineIndex].gameObject.SetActive(true);
+        debugLines[debugLineIndex].SetPositions(new Vector3[] {a, b});
+        debugLines[debugLineIndex].startColor = c;
+        debugLines[debugLineIndex].endColor = c;
+        debugLineIndex++;
+    }
+
+    //updates
     void Update() {
         
         if(!isLocalPlayer) {
             return;
         }
-
         bool fire = Input.GetMouseButton(0);
         left = Input.GetKey(KeyCode.A);
         right = Input.GetKey(KeyCode.D);
@@ -197,6 +226,8 @@ public class Player : NetworkBehaviour
 
     void FixedUpdate() {
         if(!isLocalPlayer) return;
+        debugText.text = "";
+        debugLineIndex = 0;
         ParticleSystem.EmissionModule em = ps.emission;
         if(onGround) {
             em.enabled = false;
@@ -206,44 +237,81 @@ public class Player : NetworkBehaviour
                     rb.AddRelativeForce(jumpPower * new Vector2(0, 1));
                     jumpTimer = 0;
             }
-        } else if(jet){ //jetpack
+        } 
+        if(jet) { //jetpack
             
+            em.enabled = true;
+
             ParticleSystem.ShapeModule sm = ps.shape;
-            Vector2 jetDir = new Vector2(0,0);
-            if(left) jetDir.x -= 1;
-            if(right) jetDir.x += 1;
-            if(up) jetDir.y += 1;
-            if(down) jetDir.y -= 1;
-            if(jetDir.x != 0 || jetDir.y != 0) {
-                em.enabled = true;
+
+            Vector3 jetDesiredVec = new Vector2(0, 0);
+            jetDesiredVec.x = (left ? 1 : 0) + (right ? -1 : 0);
+            jetDesiredVec.y = (down ? 1 : 0) + (up ? -1 : 0);
+
+            Vector3 jetCurrentRotVec =  new Vector2(
+                Cos(PI / 180 * (ps.shape.rotation.z)),
+                Sin(PI / 180 * (ps.shape.rotation.z))
+            );
+
+            if(jetDesiredVec.x != 0 || jetDesiredVec.y != 0) {
+                //rotate jet current vec towards desired vec and update particle shape rotation to match
+                float angleDiff = Vector2.SignedAngle(jetCurrentRotVec, jetDesiredVec);
+
+                float angleAdjust = Time.fixedDeltaTime * (angleDiff / 180.0f) * jetCorrectionRate;
+
+                jetCurrentRotVec = Quaternion.AngleAxis(
+                    angleAdjust,
+                    Vector3.forward
+                ) * jetCurrentRotVec;
+
+                sm.rotation = new Vector3(0, 0,
+                    (sm.rotation.z + angleAdjust)
+                );
             }
-            else em.enabled = false;
-            Vector3 jetDesiredRot = 5.0f * new Vector3(0, 0, 180.0f / PI * Atan2(jetDir.y, jetDir.x) - 180);
-            Vector3 smRot = 5.0f * new Vector3(Cos(sm.rotation.z * PI / 180.0f), Sin(sm.rotation.z * PI / 180.0f));
-            float jetAngleDiff = Vector2.SignedAngle(smRot, jetDesiredRot);
-            float correctionSpeed = 20.0f;
-            sm.rotation = new Vector3(0, 0, sm.rotation.z + (jetAngleDiff / 180.0f) * correctionSpeed);
-            rb.AddRelativeForce(Time.fixedDeltaTime * jetPackPower * jetDir);
+
+            rb.AddRelativeForce(Time.fixedDeltaTime * -1 * jetPackPower * jetCurrentRotVec);
         } else {
             em.enabled = false;
         }
 
-        //gravity
-        Vector2 gVector = pm.gravVectorSum(
+        //vectors
+        Vector2 gVector = pm.gravVectorSum( //gravity sum vector
             transform.position.x, transform.position.y, rb.mass
         );
+        Vector2 rotVec = new Vector2( //points in down direction relative to player
+            Cos((rb.rotation - 90) * PI / 180),
+            Sin((rb.rotation - 90) * PI / 180)
+        );
 
+        //drawDebugLine(transform.position, transform.position + 3 * v2to3(rb.velocity), Color.red);    //vel
+        //drawDebugLine(transform.position, transform.position + v2to3(gVector), Color.blue);           //grav
+        //drawDebugLine(transform.position, transform.position + 3 * v2to3(rotVec), Color.green);       //rot
+        
         //adjust rotation to match gravity
-        Vector2 rotVec = new Vector2(Cos(rb.rotation * PI / 180), Sin(rb.rotation * PI / 180));
         float offGravRot = Vector2.SignedAngle( //difference between player rotation and gravity
             gVector,
             rotVec
-        ) - 90;
+        );
         rb.AddTorque(-15.0f * offGravRot * Time.fixedDeltaTime * healthMax / (health + 1/100000.0f));
         rb.AddForce(Time.fixedDeltaTime * gVector);
 
+        //determines planet player is above
+        /* RaycastHit2D[] hits = new RaycastHit2D[10];
+        ContactFilter2D filter = new ContactFilter2D();
+        int hitCount = Physics2D.Raycast(transform.position, rotVec, filter.NoFilter(), hits);
+        if(hitCount > 0) {
+            foreach(RaycastHit2D hit in hits) {
+                if(!hit) continue;        
+                if(hit.transform.gameObject.CompareTag("planet")) {
+                    currentPlanet = hit.collider.gameObject.GetComponent<PlanetController>();
+                    debugText.text += "" + currentPlanet.id + ": " + Vector2.Distance(transform.position, hit.point);
+                    break;
+                }
+            }  
+        } */
+
         //mirror sprite depending on velocity vector offset to gravity vector
-        float gravVelRot = Vector2.Angle( //difference between player velocity and gravity
+        float gravVelRot = Vector2.SignedAngle( //difference between player velocity and gravity
             rb.velocity,
             gVector
         );
@@ -254,10 +322,17 @@ public class Player : NetworkBehaviour
             setForward(true);
         }
         
+        //handle unused debug lines if some are drawn conditionally
+        while(debugLineIndex < debugLines.Count) {
+            debugLines[debugLineIndex].gameObject.SetActive(false);
+            debugLineIndex++;
+        }
     }
     
+    //initializations
     public override void OnStartLocalPlayer()
     {
+
         health = healthMax;
 
         lookTransform = GameObject.Find("LookTransform").transform;
@@ -267,12 +342,19 @@ public class Player : NetworkBehaviour
         hudController = GameObject.Find("HUD").GetComponent<HudController>();
         hudController.showNameChangeHud();
         hudController.playerScript = gameObject.GetComponent<Player>();
+        debugText = hudController.gameObject.transform.GetChild(2).GetComponentInChildren<TMP_Text>();
 
         background = GameObject.Find("Background");
 
+        
+
         ps = transform.GetComponentInChildren<ParticleSystem>();
     }
-    
+
+    void Awake() {
+        debugLines = new List<LineRenderer>();
+    }
+
     void Start() {
         rb = transform.GetComponentInChildren<Rigidbody2D>();
         model = transform.GetChild(1).gameObject;

@@ -31,7 +31,7 @@ public class HudController : MonoBehaviour
 
     void Update() {
         if(initialized) {
-            if(mm_player == null) return;
+            if(playerScript == null) return;
             mm_player.transform.localPosition = 
                 new Vector3(
                     playerScript.gameObject.transform.position.x * mm_scale,
@@ -100,7 +100,7 @@ public class HudController : MonoBehaviour
         Transform mmBase = transform.GetChild(1);
         for(int i = 0; i < planets.Length; i++) {
             mm_planets[i] = Instantiate(mmPlanetPrefab);
-            mm_planets[i].transform.parent = mmBase;
+            mm_planets[i].transform.SetParent(mmBase);
             mm_planets[i].transform.localScale = new Vector3(mm_scale, mm_scale, 1);
             mm_planets[i].transform.localPosition = planets[i].transform.position * mm_scale;
             mm_planets[i].GetComponent<MeshFilter>().mesh = generateMmMesh(planets[i].GetComponent<PlanetController>().surface, 3);

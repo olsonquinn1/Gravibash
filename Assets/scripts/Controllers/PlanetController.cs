@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using Mirror;
 using static UnityEngine.Mathf;
 using UnityEngine.Rendering.Universal;
-using System.Reflection;
 
-public class PlanetController : MonoBehaviour
+public class PlanetController : NetworkBehaviour
 {
     //Mesh
     private Material planetMaterial;
@@ -180,7 +180,7 @@ public class PlanetController : MonoBehaviour
 
                 ScatterObject so = chooseScatterObjectFromGroup(0);
                 GameObject TempObj = Instantiate(so.prefab);
-                TempObj.transform.parent = ScatterBase.transform;
+                TempObj.transform.SetParent(ScatterBase.transform);
                 TempObj.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, angle+90));
                 TempObj.transform.localPosition = pos3;
                 TempObj.transform.localScale = treeScale * so.scaleOffset;
@@ -349,11 +349,11 @@ public class PlanetController : MonoBehaviour
 
     public void Init() {
         ScatterBase = new GameObject("Scatter Base");
-        ScatterBase.transform.parent = transform;
+        ScatterBase.transform.SetParent(transform);
         ScatterBase.transform.localPosition = new Vector3(0, 0, 0);
 
         spawnBase = new GameObject("Spawn Base");
-        spawnBase.transform.parent = transform;
+        spawnBase.transform.SetParent(transform);
         spawnBase.transform.localPosition = new Vector3(0, 0, 0);
 
         //generate the planet's mesh / scatter
@@ -366,7 +366,7 @@ public class PlanetController : MonoBehaviour
                 Cos(PI * 2 * ((float) i / 4)), Sin(PI * 2 * ((float) i / 4)), 0
             );
             GameObject spawn = Instantiate(spawnLocationObj);
-            spawn.transform.parent = spawnBase.transform;
+            spawn.transform.SetParent(spawnBase.transform);
             spawn.transform.localPosition = pos;
             spawnLocations.Add(spawn);
         }
