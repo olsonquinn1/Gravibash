@@ -6,7 +6,6 @@ using Mirror;
 
 public class ProjectileBehavior : NetworkBehaviour
 {
-    [SerializeField] ManagerDictionary ProjectileList;
     [SerializeField] float ProjectileOffset = 5.0f;
 
     [HideInInspector] public PlanetManager planetMan;
@@ -19,16 +18,15 @@ public class ProjectileBehavior : NetworkBehaviour
     //scriptable objects
     private ProjectileManager ProjectileSettings;
 
-    public void Init(ProjectileManager ProjectileSettings, Vector3 initialPosition, Vector2 initialVelocity, float angle) {
+    public void Init(ProjectileManager ProjectileSettingsIn, Vector3 initialPosition, Vector2 initialVelocity, float angle) {
         planetMan = FindFirstObjectByType<PlanetManager>();
+        ProjectileSettings = ProjectileSettingsIn;
         rb.velocity = initialVelocity + (ProjectileSettings.projectileBaseVel * speed * new Vector2(Cos(angle), Sin(angle)));
-        transform.position = initialPosition + (ProjectileOffset * new Vector3(Cos(angle), Sin(angle),0));
+        transform.position = initialPosition;
     }
 
     void Awake() {
         rb = GetComponent<Rigidbody2D>();
-        
-        
     }
 
     void Update() {
@@ -43,9 +41,10 @@ public class ProjectileBehavior : NetworkBehaviour
 
     void FixedUpdate()
     {
-        rb.AddForce(Time.fixedDeltaTime * ProjectileSettings.projectileGravFactor * planetMan.gravVectorSum(
-            transform.position.x, transform.position.y, rb.mass
-        ) - ProjectileSettings.projectileDragCoef * rb.velocity * planetMan.atmoDensity(transform.position.x, transform.position.y));
+        Vector2 force = Time.fixedDeltaTime * ProjectileSettings.projectileGravFactor * planetMan.gravVectorSum(
+            transform.position.x, transform.position.y, rb.mass)
+             - Time.fixedDeltaTime * ProjectileSettings.projectileDragCoef * rb.velocity * planetMan.atmoDensity(transform.position.x, transform.position.y);
+        rb.AddForce(force);
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
