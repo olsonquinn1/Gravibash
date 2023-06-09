@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: ProjectileList
   m_EditorClassIdentifier: 
   projList:
+  - {fileID: 11400000, guid: df431e6c154b98b4e866d2487af55412, type: 2}
   - {fileID: 11400000, guid: 7a27a071153e8864698607b6c2035298, type: 2}

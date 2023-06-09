@@ -360,8 +360,7 @@ public class Player : NetworkBehaviour
     void Awake() {
         debugLines = new List<LineRenderer>();
         projectileProperties = ProjectileDictionary.loadProperties(projType);
-        projectilePrefab = projectileProperties.projectilePrefab; 
-        Debug.Log("UrMom");
+        projectilePrefab = projectileProperties.projectilePrefab;
     }
 
     void Start() {
