@@ -48,10 +48,10 @@ public class PlanetManager : MonoBehaviour
             if(!p.isStatic) {
                 timing[id] = (p.offset) * p.period;
                 obj[id].GetComponent<Rigidbody2D>().isKinematic = false;
-
+                timing[id] = p.offset * p.period;
                 pObj.transform.position = new Vector3(
-                    p.origin.x + p.majorAxis * Cos((p.reverse ? -1 : 1) * PI * 2 * (p.offset * p.period)),
-                    p.origin.y + p.minorAxis * Sin((p.reverse ? -1 : 1) * PI * 2 * (p.offset * p.period)),
+                    p.origin.x + p.majorAxis * Cos((p.reverse ? -1 : 1) * PI * 2 * timing[id]),
+                    p.origin.y + p.minorAxis * Sin((p.reverse ? -1 : 1) * PI * 2 * timing[id]),
                     0
                 );
                 //testX = pObj.transform.position.x;
@@ -73,6 +73,27 @@ public class PlanetManager : MonoBehaviour
         for(int i = 0; i < planets.Count; i++) if(ctrl[i] != null)
             sum += ctrl[i].gravVector(x, y, m);
         return sum;
+    }
+
+    public bool gravVectorSumAtDeltaTime(float x, float y, float m, float dt, ref Vector2 sum) {
+        sum = new Vector2(0, 0);
+        for(int i = 0; i < planets.Count; i++) if(ctrl[i] != null) {
+            Vector3 pPos = posAtDeltaTime(i, dt);
+            Vector2 gVec = new Vector2(0, 0);
+            if(ctrl[i].gravVectorAtDeltaTime(x, y, pPos.x, pPos.y, m, ref gVec)) return true;
+            sum += gVec;
+        }
+        return false;
+    }
+
+    private Vector2 posAtDeltaTime(int id, float dt) {
+        PlanetSceneObject p = sc[id];
+        if(p.isStatic) return new Vector3(p.origin.x, p.origin.y, 0);
+        return new Vector3(
+            p.origin.x + p.majorAxis * Cos((p.reverse ? -1 : 1) * PI * 2 * (timing[id] + dt) / p.period),
+            p.origin.y + p.minorAxis * Sin((p.reverse ? -1 : 1) * PI * 2 * (timing[id] + dt) / p.period),
+            0
+        );
     }
 
     Vector2 getVel(int planetId) {

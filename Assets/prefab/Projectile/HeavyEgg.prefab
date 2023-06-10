@@ -136,8 +136,9 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  ProjectileOffset: 5
   planetMan: {fileID: 0}
-  speed: 16
+  speed: 1
   lifeTime: 5
 --- !u!70 &1725864535609092260
 CapsuleCollider2D:

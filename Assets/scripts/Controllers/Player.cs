@@ -230,6 +230,24 @@ public class Player : NetworkBehaviour
 
     }
 
+    private Vector3[] getPath() {
+        List<Vector3> path = new List<Vector3>();
+        path.Add(transform.position);
+        Vector2 vel = rb.velocity * rb.mass;
+        Vector2 pos = transform.position;
+        for(int i = 1; i < 500; i++) {
+            Vector2 gVecDt = new Vector2(0,0);
+            if(pm.gravVectorSumAtDeltaTime(pos.x, pos.y, rb.mass, Time.fixedDeltaTime, ref gVecDt))
+                break;
+            vel += Time.fixedDeltaTime * gVecDt / rb.mass;
+            pos += Time.fixedDeltaTime * vel;
+            path.Add(new Vector3(
+                pos.x,
+                pos.y
+            ));
+        }
+        return path.ToArray();
+    }
     void FixedUpdate() {
         if(!isLocalPlayer) return;
         debugText.text = "";
@@ -327,6 +345,10 @@ public class Player : NetworkBehaviour
         } else if(gravVelRot > 95 && rb.velocity.magnitude > 0.5f) {
             setForward(true);
         }
+
+        Vector3[] path = getPath();
+        pathRenderer.positionCount = path.Length;
+        pathRenderer.SetPositions(path);
         
         //handle unused debug lines if some are drawn conditionally
         while(debugLineIndex < debugLines.Count) {

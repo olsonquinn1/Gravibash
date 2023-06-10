@@ -81,6 +81,24 @@ public class PlanetController : NetworkBehaviour
         );
     }
 
+    public bool gravVectorAtDeltaTime(float x, float y, float myX, float myY, float m, ref Vector2 v) {
+        float dist = Sqrt(
+            Pow(myX - x, 2) + Pow(myY - y, 2)
+        );
+        if(dist <= radius) return true;
+
+        float force = G * m * mass / Pow(dist, gravityFalloff);
+        float accel = force / m;
+        float angle =  Atan2(myY - y, myX - x);
+
+        v = new Vector2(
+            accel * Cos(angle),
+            accel * Sin(angle)
+        );
+        
+        return false;
+    }
+
     public float LocalDensity(float x1, float y1) {
         float e = MathF.E;
 
