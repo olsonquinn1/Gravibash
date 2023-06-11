@@ -35,7 +35,7 @@ Transform:
   m_GameObject: {fileID: 7445139758570961900}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4400549129474627839}
@@ -110,7 +110,7 @@ SpriteRenderer:
   m_SortingLayerID: 452040777
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 2fb523d4449c9ec438683495cc3d3c29, type: 3}
+  m_Sprite: {fileID: 2786900863952676094, guid: ff30f9af19b89684691aa62354e34980, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -174,8 +174,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0069473693, y: -0.002102315}
-  m_Size: {x: 0.22518238, y: 0.17960076}
+  m_Offset: {x: 0.00997916, y: 0.0042499597}
+  m_Size: {x: 2.3587134, y: 1.7924489}
   m_Direction: 1
 --- !u!198 &-170131827173927179
 ParticleSystem:
@@ -366,8 +366,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 1, g: 0, b: 0, a: 1}
-      maxColor: {r: 1, g: 0.739583, b: 0, a: 1}
+      minColor: {r: 1, g: 0, b: 0, a: 0.6509804}
+      maxColor: {r: 1, g: 0.89650905, b: 0, a: 0.7019608}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -431,7 +431,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.03
+      scalar: 0.3
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -484,7 +484,7 @@ ParticleSystem:
     startSizeY:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.03
+      scalar: 0.3
       minScalar: 1
       maxCurve:
         serializedVersion: 2
