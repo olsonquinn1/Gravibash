@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74817421020f4ee47b54b4f26d919e1d, type: 3}
+  m_Name: Default Planet 1
+  m_EditorClassIdentifier: 
+  radius: 20
+  segments: 226
+  textureTiers: 3
+  uvWidth: 2
+  uvMirror: 1
+  heightPerLevel: 1.9
+  surfaceLevel: 1
+  planetLighting: {fileID: 4404863688223244734, guid: 0f94cdbecc9b82a418be7494314c8ca5, type: 3}
+  smoothness: 63.4
+  minSmoothPercent: 7.02
+  smoothOffset: 11.12
+  scale: 11.25
+  minScalePercent: 0
+  scaleOffset: 19.11
+  seed: 116.2
+  enableScatter: 1
+  scatterGroups:
+  - {fileID: 11400000, guid: eb30a9533689686499b697206515e129, type: 2}
+  patchScale: 1
+  treeDensity: 0
+  probabilityShift: -1.31
+  TreeScaleMin: 0.29
+  TreeScaleMax: 0.5
+  TreeHeightOffset: 0
+  mass: 5e+9
+  gravityFalloff: 1.2

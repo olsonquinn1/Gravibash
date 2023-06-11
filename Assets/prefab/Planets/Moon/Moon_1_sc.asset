@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b63f0ed88b78fea4cad2af9081ec0e6b, type: 3}
+  m_Name: Moon_1_sc
+  m_EditorClassIdentifier: 
+  planet: {fileID: 11400000, guid: 91fb42637e1b8eb449d779a4439c991d, type: 2}
+  isStatic: 0
+  origin: {x: 0, y: 0, z: 0}
+  majorAxis: 37
+  minorAxis: 37
+  rotation: 0
+  period: 60
+  offset: 0
+  reverse: 0
