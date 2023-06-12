@@ -18,9 +18,14 @@ public class PlanetManager : NetworkBehaviour
     private float G = 6.67f * Pow(10, -6);
     [SerializeField] private bool editor = false;
 
-    float[] timing;
+    [HideInInspector] public float[] timing;
 
-    [Server] [ClientRpc]
+    [Command]
+    private void CmdUpdateTiming(int i, float t) {
+        updateTiming(i, t);
+    }
+
+    [ClientRpc]
     private void updateTiming(int i, float t) {
         timing[i] = t;
     }
@@ -93,7 +98,7 @@ public class PlanetManager : NetworkBehaviour
             Pow(pos.x - x, 2) + Pow(pos.y - y, 2)
         );
         if(dist <= ctrl[id].radius) {
-            drawDebugCircle(pos, ctrl[id].radius);
+            drawDebugCircle(pos, ctrl[id].radius, Color.yellow);
             return true;
         }
         float accel = G * ctrl[id].mass / Pow(dist, ctrl[id].gravityFalloff);
@@ -120,7 +125,7 @@ public class PlanetManager : NetworkBehaviour
         return pos;
     }
 
-    private void drawDebugCircle(Vector3 pos, float r) {
+    private void drawDebugCircle(Vector3 pos, float r, Color c) {
         int res = 20;
         Vector3[] points = new Vector3[res];
         points[0] = new Vector3(
@@ -133,9 +138,9 @@ public class PlanetManager : NetworkBehaviour
                 pos.x + r * Cos(PI * 2 * i / res),
                 pos.y + r * Sin(PI * 2 * i / res)
             );
-            Debug.DrawLine(points[i - 1], points[i], Color.yellow, 0);
+            Debug.DrawLine(points[i - 1], points[i], c, 0);
         }
-        Debug.DrawLine(points[res - 1], points[0], Color.yellow, 0);
+        Debug.DrawLine(points[res - 1], points[0], c, 0);
         
     }
 
@@ -164,7 +169,8 @@ public class PlanetManager : NetworkBehaviour
                 );
                 rb.velocity += 15 * posOffset;
                 timing[i] += Time.fixedDeltaTime;
-                updateTiming(i, timing[i]);
+                if(!isClientOnly)
+                    CmdUpdateTiming(i, timing[i]);
             }
         }
     }

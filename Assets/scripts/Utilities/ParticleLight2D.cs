@@ -10,7 +10,7 @@ public class ParticleLight2D : MonoBehaviour
     private ParticleSystem.Particle[] particleBuffer;
 
     void Start() {
-        particleBuffer = new ParticleSystem.Particle[100];
+        particleBuffer = new ParticleSystem.Particle[10];
         particleLights = new List<GameObject>();
     }
 

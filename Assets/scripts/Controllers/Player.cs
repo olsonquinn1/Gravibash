@@ -37,7 +37,6 @@ public class Player : NetworkBehaviour
     private ProjectileManager projectileProperties;
     public string projType = "HeavyEgg";
 
-    
     //misc cache
     private Rigidbody2D rb;
     private Transform lookTransform;
@@ -356,7 +355,7 @@ public class Player : NetworkBehaviour
     //initializations
     public override void OnStartLocalPlayer()
     {
-
+        base.OnStartLocalPlayer();
         health = healthMax;
 
         lookTransform = GameObject.Find("LookTransform").transform;

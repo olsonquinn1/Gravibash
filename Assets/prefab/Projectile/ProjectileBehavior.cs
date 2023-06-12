@@ -27,8 +27,6 @@ public class ProjectileBehavior : NetworkBehaviour
         ProjectileSettings = ProjectileSettingsIn;
         rb.velocity = initialVelocity + (ProjectileSettings.projectileBaseVel * speed * new Vector2(Cos(angle), Sin(angle)));
         transform.position = initialPosition;
-        rb.sharedMaterial.friction = 0.5f;//ProjectileSettings.projectileFriction;
-        rb.sharedMaterial.bounciness = ProjectileSettings.projectileElacticity;
     }
 
     void Awake() {

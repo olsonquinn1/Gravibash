@@ -369,6 +369,7 @@ public class PlanetController : NetworkBehaviour
     }
 
     public void Init() {
+        GetComponent<Rigidbody2D>().mass = 9999999999999999999;
         ScatterBase = new GameObject("Scatter Base");
         ScatterBase.transform.SetParent(transform);
         ScatterBase.transform.localPosition = new Vector3(0, 0, 0);
