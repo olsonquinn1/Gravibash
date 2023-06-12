@@ -45,6 +45,9 @@ public class PlanetController : NetworkBehaviour
 
     //physics
     public float mass;
+
+    [SyncVar]
+    public float timing;
     [HideInInspector] public float gravityFalloff; //how distance affects gravity falloff: 0 = not at all, 2 = realistic
 
     [SerializeField] public PlanetObject planet;

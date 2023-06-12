@@ -31,7 +31,7 @@ MonoBehaviour:
   seed: 50
   enableScatter: 1
   scatterGroups:
-  - {fileID: 11400000, guid: eb30a9533689686499b697206515e129, type: 2}
+  - {fileID: 11400000, guid: 104a118dd807ed34597405165874247a, type: 2}
   patchScale: 1
   treeDensity: 0
   probabilityShift: 0

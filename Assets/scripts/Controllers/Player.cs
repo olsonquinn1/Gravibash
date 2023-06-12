@@ -235,7 +235,7 @@ public class Player : NetworkBehaviour
         Vector2 pos = transform.position;
         for(int i = 1; i < 500; i++) {
             Vector2 gVecDt = new Vector2(0,0);
-            if(pm.gravVectorSumAtDeltaTime(pos.x, pos.y, rb.mass, Time.fixedDeltaTime, ref gVecDt))
+            if(pm.gravVectorSumAtDeltaTime(pos.x, pos.y, rb.mass, 0, ref gVecDt))
                 break;
             vel += Time.fixedDeltaTime * gVecDt / rb.mass;
             pos += Time.fixedDeltaTime * vel;
@@ -248,7 +248,6 @@ public class Player : NetworkBehaviour
     }
     void FixedUpdate() {
         if(!isLocalPlayer) return;
-        debugText.text = "";
         debugLineIndex = 0;
         ParticleSystem.EmissionModule em = ps.emission;
         if(onGround) {
@@ -326,7 +325,6 @@ public class Player : NetworkBehaviour
                 if(!hit) continue;        
                 if(hit.transform.gameObject.CompareTag("planet")) {
                     currentPlanet = hit.collider.gameObject.GetComponent<PlanetController>();
-                    debugText.text += "" + currentPlanet.id + ": " + Vector2.Distance(transform.position, hit.point);
                     break;
                 }
             }  
@@ -344,7 +342,7 @@ public class Player : NetworkBehaviour
         } else if(gravVelRot > 95 && relVel.magnitude > 0.5f) {
             setForward(true);
         }
-        
+
         //handle unused debug lines if some are drawn conditionally
         while(debugLineIndex < debugLines.Count) {
             debugLines[debugLineIndex].gameObject.SetActive(false);
@@ -358,6 +356,8 @@ public class Player : NetworkBehaviour
         base.OnStartLocalPlayer();
         health = healthMax;
 
+        
+        
         lookTransform = GameObject.Find("LookTransform").transform;
         CinemachineVirtualCamera vcam = GameObject.Find("Virtual Camera").GetComponent<CinemachineVirtualCamera>();
         vcam.Follow = lookTransform;
@@ -366,7 +366,8 @@ public class Player : NetworkBehaviour
         hudController.showNameChangeHud();
         hudController.playerScript = gameObject.GetComponent<Player>();
         debugText = hudController.gameObject.transform.GetChild(2).GetComponentInChildren<TMP_Text>();
-
+        pm = GameObject.Find("PlanetManager").GetComponent<PlanetManager>();
+        pm.debugText = debugText;
         background = GameObject.Find("Background");
 
         
@@ -385,11 +386,11 @@ public class Player : NetworkBehaviour
         rb.centerOfMass = new Vector2(0, -0.4f);
 
         model = transform.GetChild(1).gameObject;
-        pm = GameObject.Find("PlanetManager").GetComponent<PlanetManager>();
-
+        
         //align player to gravity when spawned
         transform.position = pm.getSpawnLocation();
         rb.velocity = new Vector2(0,0);
         alignToGravity();
+        
     }
 }

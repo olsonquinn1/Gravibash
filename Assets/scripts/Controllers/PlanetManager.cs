@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Mathf;
+using TMPro;
 using Mirror;
 
 public class PlanetManager : NetworkBehaviour
@@ -12,32 +13,21 @@ public class PlanetManager : NetworkBehaviour
     private PlanetSceneObject[] sc;
     private GameObject[] obj;
     private PlanetController[] ctrl;
+    [HideInInspector] public TMP_Text debugText;
     
     private float[] velNorm;
     private float[] velAngle;
     private float G = 6.67f * Pow(10, -6);
     [SerializeField] private bool editor = false;
 
-    [HideInInspector] public float[] timing;
-
-    [Command]
-    private void CmdUpdateTiming(int i, float t) {
-        updateTiming(i, t);
-    }
-
-    [ClientRpc]
-    private void updateTiming(int i, float t) {
-        timing[i] = t;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
+
         //create a planet prefab for each planet
         ctrl = new PlanetController[planets.Count];
         sc = new PlanetSceneObject[planets.Count];
         obj = new GameObject[planets.Count];
-        timing = new float[planets.Count];
         velNorm = new float[planets.Count];
         velAngle = new float[planets.Count];
         int id = 0;
@@ -55,10 +45,9 @@ public class PlanetManager : NetworkBehaviour
             ctrl[id] = pObj.GetComponent<PlanetController>();
             if(!p.isStatic) {
                 obj[id].GetComponent<Rigidbody2D>().isKinematic = false;
-                timing[id] = p.offset * p.period;
                 pObj.transform.position = new Vector3(
-                    p.origin.x + p.majorAxis * Cos((p.reverse ? -1.0f : 1.0f) * PI * 2.0f * timing[id]),
-                    p.origin.y + p.minorAxis * Sin((p.reverse ? -1.0f : 1.0f) * PI * 2.0f * timing[id]),
+                    p.origin.x + p.majorAxis * Cos((p.reverse ? -1.0f : 1.0f) * PI * 2.0f * (float) NetworkTime.time / sc[id].period),
+                    p.origin.y + p.minorAxis * Sin((p.reverse ? -1.0f : 1.0f) * PI * 2.0f * (float) NetworkTime.time / sc[id].period),
                     0
                 );
                 //testX = pObj.transform.position.x;
@@ -117,8 +106,8 @@ public class PlanetManager : NetworkBehaviour
         PlanetSceneObject p = sc[id];
         if(p.isStatic) return new Vector3(p.origin.x, p.origin.y, 0);
         Vector2 pos = Quaternion.AngleAxis(sc[id].rotation, Vector3.forward) * new Vector3(
-            p.origin.x + p.majorAxis * Cos((p.reverse ? -1.0f : 1.0f) * PI * 2.0f * (timing[id] + dt) / p.period + (PI / 2.0f)),
-            p.origin.y + p.minorAxis * Sin((p.reverse ? -1.0f : 1.0f) * PI * 2.0f * (timing[id] + dt) / p.period + (PI / 2.0f)),
+            p.origin.x + p.majorAxis * Cos((p.reverse ? -1.0f : 1.0f) * PI * 2.0f * ((float) NetworkTime.time + dt) / p.period + (PI / 2.0f)),
+            p.origin.y + p.minorAxis * Sin((p.reverse ? -1.0f : 1.0f) * PI * 2.0f * ((float) NetworkTime.time + dt) / p.period + (PI / 2.0f)),
             0
         );
         
@@ -152,12 +141,13 @@ public class PlanetManager : NetworkBehaviour
         return ctrl[UnityEngine.Random.Range(0, ctrl.Length)].getSpawnLocation();
     }
     void FixedUpdate() {
+        string s = "";
         for(int i = 0; i < planets.Count; i++) {
             if(!sc[i].isStatic) {
                 Rigidbody2D rb = obj[i].GetComponent<Rigidbody2D>();
                 Quaternion rot = Quaternion.AngleAxis(sc[i].rotation, Vector3.forward);
-                float velMagX = -1.0f * Sin( velAngle[i] * timing[i] );
-                float velMagY = Cos( velAngle[i] * timing[i] ) ;
+                float velMagX = -1.0f * Sin( velAngle[i] * (float) NetworkTime.time );
+                float velMagY = Cos( velAngle[i] * (float) NetworkTime.time ) ;
                 rb.velocity = rot * new Vector3(
                      velNorm[i] * velMagX,
                      velNorm[i] * velMagY
@@ -168,11 +158,10 @@ public class PlanetManager : NetworkBehaviour
                     0
                 );
                 rb.velocity += 15 * posOffset;
-                timing[i] += Time.fixedDeltaTime;
-                if(!isClientOnly)
-                    CmdUpdateTiming(i, timing[i]);
+                s += "" + i + ": " + (float) NetworkTime.time + "\n";
             }
         }
+        debugText.text = s;
     }
 
     /* if(!testXRev) {
