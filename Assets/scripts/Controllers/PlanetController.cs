@@ -10,7 +10,7 @@ public class PlanetController : NetworkBehaviour
 {
     //Mesh
     private Material planetMaterial;
-    private float radius;
+    [HideInInspector] public float radius;
     private int segments;
     private int textureTiers;
     private int uvWidth;
@@ -44,8 +44,8 @@ public class PlanetController : NetworkBehaviour
     private float TreeHeightOffset;
 
     //physics
-    private float mass;
-    private float gravityFalloff; //how distance affects gravity falloff: 0 = not at all, 2 = realistic
+    public float mass;
+    [HideInInspector] public float gravityFalloff; //how distance affects gravity falloff: 0 = not at all, 2 = realistic
 
     [SerializeField] public PlanetObject planet;
 
@@ -81,23 +81,7 @@ public class PlanetController : NetworkBehaviour
         );
     }
 
-    public bool gravVectorAtDeltaTime(float x, float y, float myX, float myY, float m, ref Vector2 v) {
-        float dist = Sqrt(
-            Pow(myX - x, 2) + Pow(myY - y, 2)
-        );
-        if(dist <= radius) return true;
-
-        float force = G * m * mass / Pow(dist, gravityFalloff);
-        float accel = force / m;
-        float angle =  Atan2(myY - y, myX - x);
-
-        v = new Vector2(
-            accel * Cos(angle),
-            accel * Sin(angle)
-        );
-        
-        return false;
-    }
+    
 
     public float LocalDensity(float x1, float y1) {
         float e = MathF.E;

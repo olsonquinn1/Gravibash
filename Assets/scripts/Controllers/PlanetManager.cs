@@ -4,7 +4,7 @@ using UnityEngine;
 using static UnityEngine.Mathf;
 using Mirror;
 
-public class PlanetManager : MonoBehaviour
+public class PlanetManager : NetworkBehaviour
 {
 
     [SerializeField] public List<PlanetSceneObject> planets;
@@ -12,15 +12,19 @@ public class PlanetManager : MonoBehaviour
     private PlanetSceneObject[] sc;
     private GameObject[] obj;
     private PlanetController[] ctrl;
-    private float[] timing;
+    
     private float[] velNorm;
     private float[] velAngle;
+    private float G = 6.67f * Pow(10, -6);
     [SerializeField] private bool editor = false;
-    /* private float testX;
-    private bool testXRev = false;
-    private float testY;
-    private bool testYRev = false; */
-    
+
+    float[] timing;
+
+    [Server] [ClientRpc]
+    private void updateTiming(int i, float t) {
+        timing[i] = t;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,14 +48,12 @@ public class PlanetManager : MonoBehaviour
             obj[id] = pObj;
             sc[id] = p;
             ctrl[id] = pObj.GetComponent<PlanetController>();
-            timing[id] = 0;
             if(!p.isStatic) {
-                timing[id] = (p.offset) * p.period;
                 obj[id].GetComponent<Rigidbody2D>().isKinematic = false;
                 timing[id] = p.offset * p.period;
                 pObj.transform.position = new Vector3(
-                    p.origin.x + p.majorAxis * Cos((p.reverse ? -1 : 1) * PI * 2 * timing[id]),
-                    p.origin.y + p.minorAxis * Sin((p.reverse ? -1 : 1) * PI * 2 * timing[id]),
+                    p.origin.x + p.majorAxis * Cos((p.reverse ? -1.0f : 1.0f) * PI * 2.0f * timing[id]),
+                    p.origin.y + p.minorAxis * Sin((p.reverse ? -1.0f : 1.0f) * PI * 2.0f * timing[id]),
                     0
                 );
                 //testX = pObj.transform.position.x;
@@ -78,25 +80,66 @@ public class PlanetManager : MonoBehaviour
     public bool gravVectorSumAtDeltaTime(float x, float y, float m, float dt, ref Vector2 sum) {
         sum = new Vector2(0, 0);
         for(int i = 0; i < planets.Count; i++) if(ctrl[i] != null) {
-            Vector3 pPos = posAtDeltaTime(i, dt);
             Vector2 gVec = new Vector2(0, 0);
-            if(ctrl[i].gravVectorAtDeltaTime(x, y, pPos.x, pPos.y, m, ref gVec)) return true;
+            if(gravVectorAtDeltaTime(x, y, m, dt, i, ref gVec)) return true;
             sum += gVec;
         }
+        return false;
+    }
+
+    public bool gravVectorAtDeltaTime(float x, float y, float m, float dt, int id, ref Vector2 v) {
+        Vector2 pos = posAtDeltaTime(id, dt);
+        float dist = Sqrt(
+            Pow(pos.x - x, 2) + Pow(pos.y - y, 2)
+        );
+        if(dist <= ctrl[id].radius) {
+            drawDebugCircle(pos, ctrl[id].radius);
+            return true;
+        }
+        float accel = G * ctrl[id].mass / Pow(dist, ctrl[id].gravityFalloff);
+
+        float angle =  Atan2(pos.y - y, pos.x - x);
+
+        v = new Vector2(
+            accel * Cos(angle),
+            accel * Sin(angle)
+        );
+        
         return false;
     }
 
     private Vector2 posAtDeltaTime(int id, float dt) {
         PlanetSceneObject p = sc[id];
         if(p.isStatic) return new Vector3(p.origin.x, p.origin.y, 0);
-        return new Vector3(
-            p.origin.x + p.majorAxis * Cos((p.reverse ? -1 : 1) * PI * 2 * (timing[id] + dt) / p.period),
-            p.origin.y + p.minorAxis * Sin((p.reverse ? -1 : 1) * PI * 2 * (timing[id] + dt) / p.period),
+        Vector2 pos = Quaternion.AngleAxis(sc[id].rotation, Vector3.forward) * new Vector3(
+            p.origin.x + p.majorAxis * Cos((p.reverse ? -1.0f : 1.0f) * PI * 2.0f * (timing[id] + dt) / p.period + (PI / 2.0f)),
+            p.origin.y + p.minorAxis * Sin((p.reverse ? -1.0f : 1.0f) * PI * 2.0f * (timing[id] + dt) / p.period + (PI / 2.0f)),
             0
         );
+        
+        return pos;
     }
 
-    Vector2 getVel(int planetId) {
+    private void drawDebugCircle(Vector3 pos, float r) {
+        int res = 20;
+        Vector3[] points = new Vector3[res];
+        points[0] = new Vector3(
+            pos.x + r,
+            pos.y
+        );
+
+        for(int i = 1; i < res; i++) {
+            points[i] = new Vector3(
+                pos.x + r * Cos(PI * 2 * i / res),
+                pos.y + r * Sin(PI * 2 * i / res)
+            );
+            Debug.DrawLine(points[i - 1], points[i], Color.yellow, 0);
+        }
+        Debug.DrawLine(points[res - 1], points[0], Color.yellow, 0);
+        
+    }
+
+    public Vector2 getVel(int planetId) {
         return obj[planetId].GetComponent<Rigidbody2D>().velocity;
     }
 
@@ -119,11 +162,13 @@ public class PlanetManager : MonoBehaviour
                     sc[i].origin.y + sc[i].minorAxis * velMagY - obj[i].transform.position.y,
                     0
                 );
-                rb.velocity += posOffset;
+                rb.velocity += 15 * posOffset;
                 timing[i] += Time.fixedDeltaTime;
+                updateTiming(i, timing[i]);
             }
         }
     }
+
     /* if(!testXRev) {
         if(obj[i].transform.position.x < testX) testX = obj[i].transform.position.x;
         else {

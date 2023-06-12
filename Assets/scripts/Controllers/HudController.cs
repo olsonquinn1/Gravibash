@@ -18,11 +18,14 @@ public class HudController : MonoBehaviour
     private GameObject[] planets;
     private GameObject[] mm_planets;
     private bool initialized = false;
+    private LineRenderer pathRenderer;
 
     [HideInInspector] public Player playerScript;
     
     void Start()
     {
+        pathRenderer = GetComponentInChildren<LineRenderer>();
+        pathRenderer.useWorldSpace = false;
         nameChangeButton.onClick.AddListener(nameChangeButtonOnClick);
         mm_scaleUp.onClick.AddListener(OnMMScaleUp);
         mm_scaleDown.onClick.AddListener(OnMMScaleDown);
@@ -49,6 +52,16 @@ public class HudController : MonoBehaviour
                         0
                     );
             }
+
+            if(!playerScript.onGround) {
+                pathRenderer.enabled = true;
+                Vector3[] path = playerScript.getPath();
+                pathRenderer.positionCount = path.Length;
+                pathRenderer.SetPositions(path);
+            } else {
+                pathRenderer.enabled = false;
+            }
+
         }
     }
 

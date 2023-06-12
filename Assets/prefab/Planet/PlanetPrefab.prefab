@@ -51,6 +51,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db7311c4581f94245a4158ad0c8e6616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  radius: 0
+  mass: 0
+  gravityFalloff: 0
   planet: {fileID: 0}
   spawnLocationObj: {fileID: 6935620266522486943, guid: 7baf9a4c54f478c49b6dcdee52cc56d4, type: 3}
   surface: []
@@ -219,14 +225,14 @@ MonoBehaviour:
   syncPosition: 1
   syncRotation: 0
   syncScale: 0
-  interpolatePosition: 1
+  interpolatePosition: 0
   interpolateRotation: 0
-  interpolateScale: 1
+  interpolateScale: 0
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
   onlySyncOnChange: 1
-  onlySyncOnChangeCorrectionMultiplier: 2
+  onlySyncOnChangeCorrectionMultiplier: 0
   sendIntervalMultiplier: 30
   rotationSensitivity: 0.01
   compressRotation: 0

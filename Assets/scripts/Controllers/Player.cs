@@ -44,13 +44,13 @@ public class Player : NetworkBehaviour
     private GameObject model;
     private GameObject background;
     private ParticleSystem ps;
-    private TMP_Text debugText;
+    [HideInInspector] public TMP_Text debugText;
     private PlanetController currentPlanet;
     private int debugLineIndex = 0;
     private List<LineRenderer> debugLines;
 
     //timers and ground detection
-    private bool onGround = false;
+    [HideInInspector] public bool onGround = false;
     private bool groundTiming = false;
     private float offGroundTimer = 0;
     private float jumpCooldown = 0.5f;
@@ -229,8 +229,7 @@ public class Player : NetworkBehaviour
         }
 
     }
-
-    private Vector3[] getPath() {
+    public Vector3[] getPath() {
         List<Vector3> path = new List<Vector3>();
         path.Add(transform.position);
         Vector2 vel = rb.velocity * rb.mass;
@@ -320,7 +319,7 @@ public class Player : NetworkBehaviour
         rb.AddForce(Time.fixedDeltaTime * gVector);
 
         //determines planet player is above
-        /* RaycastHit2D[] hits = new RaycastHit2D[10];
+        RaycastHit2D[] hits = new RaycastHit2D[10];
         ContactFilter2D filter = new ContactFilter2D();
         int hitCount = Physics2D.Raycast(transform.position, rotVec, filter.NoFilter(), hits);
         if(hitCount > 0) {
@@ -332,23 +331,20 @@ public class Player : NetworkBehaviour
                     break;
                 }
             }  
-        } */
+        }
 
         //mirror sprite depending on velocity vector offset to gravity vector
+        Vector2 relVel = rb.velocity - pm.getVel(currentPlanet.id);
         float gravVelRot = Vector2.SignedAngle( //difference between player velocity and gravity
-            rb.velocity,
+            relVel,
             gVector
         );
 
-        if(gravVelRot < 85 && rb.velocity.magnitude > 0.5f) {
+        if(gravVelRot < 85 && relVel.magnitude > 0.5f) {
             setForward(false);
-        } else if(gravVelRot > 95 && rb.velocity.magnitude > 0.5f) {
+        } else if(gravVelRot > 95 && relVel.magnitude > 0.5f) {
             setForward(true);
         }
-
-        Vector3[] path = getPath();
-        pathRenderer.positionCount = path.Length;
-        pathRenderer.SetPositions(path);
         
         //handle unused debug lines if some are drawn conditionally
         while(debugLineIndex < debugLines.Count) {
@@ -387,10 +383,14 @@ public class Player : NetworkBehaviour
 
     void Start() {
         rb = transform.GetComponentInChildren<Rigidbody2D>();
+        rb.centerOfMass = new Vector2(0, -0.4f);
+
         model = transform.GetChild(1).gameObject;
-        rb.centerOfMass = new Vector2(0, -0.3f);
         pm = GameObject.Find("PlanetManager").GetComponent<PlanetManager>();
+
         //align player to gravity when spawned
+        transform.position = pm.getSpawnLocation();
+        rb.velocity = new Vector2(0,0);
         alignToGravity();
     }
 }

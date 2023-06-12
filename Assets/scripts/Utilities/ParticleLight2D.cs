@@ -22,7 +22,7 @@ public class ParticleLight2D : MonoBehaviour
             particleLights.Add(Instantiate(particleLight, transform));
         }
         while(particleLights.Count > particleCount) {
-            Destroy(particleLights[particleLights.Count]);
+            Destroy(particleLights[particleLights.Count-1]);
             particleLights.RemoveAt(particleLights.Count-1);
         }
         //adjust positions of light objects to match particles

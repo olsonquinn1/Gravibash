@@ -13,6 +13,9 @@ public class ProjectileBehavior : NetworkBehaviour
     private float timeAlive = 0;
     public float speed = 1;
     public float lifeTime = 5;
+    private bool isDestroy = false;
+    private float destructionTimer = 0;
+    private float destructionTime = 1;
     private Rigidbody2D rb;
 
     //scriptable objects
@@ -35,17 +38,30 @@ public class ProjectileBehavior : NetworkBehaviour
     }
 
     void Update() {
-        if(timeAlive >= lifeTime)
-            Destroy(gameObject);
+        if(timeAlive >= lifeTime && !isDestroy)
+            beginDestroy();
+        if(isDestroy) {
+            destructionTimer += Time.deltaTime;
+            if(destructionTimer > destructionTime)
+                Destroy(gameObject);
+        }
         rb.rotation = 180.0f / PI * Atan2(rb.velocity.y, rb.velocity.x) - 180;
         timeAlive += Time.deltaTime;
+    }
+
+    void beginDestroy() {
+        GetComponent<SpriteRenderer>().enabled = false;
+        rb.simulated = false;
+        ParticleSystem.EmissionModule psem = GetComponent<ParticleSystem>().emission;
+        psem.enabled = false;
+        isDestroy = true;
     }
 
     void FixedUpdate()
     {
         Vector2 force = Time.fixedDeltaTime * ProjectileSettings.projectileGravFactor * planetMan.gravVectorSum(
-            transform.position.x, transform.position.y, rb.mass)
-             - Time.fixedDeltaTime * ProjectileSettings.projectileDragCoef * rb.velocity * planetMan.atmoDensity(transform.position.x, transform.position.y);
+            transform.position.x, transform.position.y, rb.mass);
+             //- Time.fixedDeltaTime * ProjectileSettings.projectileDragCoef * rb.velocity * planetMan.atmoDensity(transform.position.x, transform.position.y);
         rb.AddForce(force);
     }
 
@@ -67,8 +83,7 @@ public class ProjectileBehavior : NetworkBehaviour
             else
                 otherVel = new Vector2(0,0);
             if((rb.velocity-otherVel).magnitude * 100 /(ProjectileSettings.projectileElacticity + 1) < ProjectileSettings.projectileBaseVel)
-                Destroy(gameObject);
+                beginDestroy();
         } 
-
     }
 }
