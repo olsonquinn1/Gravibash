@@ -13,20 +13,20 @@ MonoBehaviour:
   m_Name: Explosive_Yolk
   m_EditorClassIdentifier: 
   TypeName: Explosive Yolk
-  projectilePrefab: {fileID: 0}
-  projectileBaseFireRate: 0
-  projectileBaseVel: 0
-  projectileBaseDamage: 0
+  projectilePrefab: {fileID: 6930163915816799781, guid: a495e7f0ee19ea1448f3b5f8bb980ad0, type: 3}
+  projectileBaseFireRate: 2
+  projectileBaseVel: 40
+  projectileBaseDamage: 25
   projectileBaseAcc: 0
   projectileBurstSize: 0
   projectileBurstRate: 0
   reloadSize: 0
-  reloadTime: 0
+  reloadTime: 15
   projectileDragCoef: 0
-  projectileGravFactor: 0
+  projectileGravFactor: 0.1
   projectileThrustAccel: 0
   projectileTurnStrength: 0
   projectileTurnDamping: 0
   projectileElacticity: 0
-  recoilForce: 0
-  recoilAimChange: 0
+  recoilForce: 10
+  recoilAimChange: 3
