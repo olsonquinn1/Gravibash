@@ -73,7 +73,7 @@ public class ProjectileBehavior : NetworkBehaviour
             Vector2 relVel = (rb.velocity-otherVel);
             Player po = other.GetComponent<Player>();
             po.changeHealth(po.health - ProjectileSettings.projectileBaseDamage * Pow(relVel.magnitude,2)/Pow(ProjectileSettings.projectileBaseVel,2));
-            Destroy(gameObject);
+            beginDestroy();
         }
         else {
             Rigidbody2D otherBody = other.GetComponent<Rigidbody2D>();
