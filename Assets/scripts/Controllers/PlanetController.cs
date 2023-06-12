@@ -109,7 +109,9 @@ public class PlanetController : NetworkBehaviour
         float CurrRadius = Sqrt(
             Pow(transform.position.x - x1, 2) + Pow(transform.position.y - y1, 2)
         );
-        float Density = CurrRadius>MaxAtmoHeight
+        if(MaxAtmoHeight == 0)
+            return 0;
+        float Density = (CurrRadius-radius)>MaxAtmoHeight
             ? 0
             : (SurfacePressure * (Pow(e,-(CurrRadius-radius)*DensityFactor*G*mass)-Pow(e,-MaxAtmoHeight*DensityFactor*G*mass))
                 /(1.0f-Pow(e,-MaxAtmoHeight*DensityFactor*G*mass)));

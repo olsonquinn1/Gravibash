@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      projectile_RoboEgg_asset_0: 2786900863952676094
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

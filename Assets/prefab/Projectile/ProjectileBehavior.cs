@@ -24,6 +24,10 @@ public class ProjectileBehavior : NetworkBehaviour
         ProjectileSettings = ProjectileSettingsIn;
         rb.velocity = initialVelocity + (ProjectileSettings.projectileBaseVel * speed * new Vector2(Cos(angle), Sin(angle)));
         transform.position = initialPosition;
+        PhysicsMaterial2D newMaterial = Instantiate(rb.sharedMaterial);
+        newMaterial.friction = 0.5f;//ProjectileSettings.projectileFriction;
+        newMaterial.bounciness = ProjectileSettings.projectileElacticity;
+        rb.sharedMaterial = newMaterial;
     }
 
     void Awake() {
@@ -55,7 +59,6 @@ public class ProjectileBehavior : NetworkBehaviour
             po.changeHealth(po.health - ProjectileSettings.projectileBaseDamage * Pow(relVel.magnitude,2)/Pow(ProjectileSettings.projectileBaseVel,2));
             Destroy(gameObject);
         }
-        
         else {
             Rigidbody2D otherBody = other.GetComponent<Rigidbody2D>();
             Vector2 otherVel;
@@ -63,19 +66,7 @@ public class ProjectileBehavior : NetworkBehaviour
                 otherVel = otherBody.velocity;
             else
                 otherVel = new Vector2(0,0);
-            if((rb.velocity-otherVel).magnitude * 100 /(ProjectileSettings.projectileElacticity + 1) > ProjectileSettings.projectileBaseVel) {
-                ContactPoint2D[] contact = {new ContactPoint2D()};
-                int numpoints = collision.GetContacts(contact);
-                
-                if((lastContactPoint-contact[0].point).magnitude>(rb.velocity-otherVel).magnitude/10) {
-                    Vector2 normRelVel = contact[0].normal*Vector2.Dot((rb.velocity-otherVel),contact[0].normal)/Vector2.Dot(contact[0].normal,contact[0].normal);
-                    Vector2 tanRelVel = (rb.velocity-otherVel)-normRelVel;
-                    rb.velocity = otherVel +
-                        (normRelVel * (-ProjectileSettings.projectileElacticity) + tanRelVel);
-                    lastContactPoint = contact[0].point;
-                }
-            }
-            else
+            if((rb.velocity-otherVel).magnitude * 100 /(ProjectileSettings.projectileElacticity + 1) < ProjectileSettings.projectileBaseVel)
                 Destroy(gameObject);
         } 
 
