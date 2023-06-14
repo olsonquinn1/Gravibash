@@ -111,6 +111,8 @@ MonoBehaviour:
   debugLinePrefab: {fileID: 4485556549880143412, guid: 04b66a6d21dcb9f4d95b326c1c64b586, type: 3}
   ProjectileDictionary: {fileID: 11400000, guid: 5429e372f65a6574db2b9801a9f11e05, type: 2}
   projType: HeavyEgg
+  debugText: {fileID: 0}
+  onGround: 0
   health: 0
   forward: 1
 --- !u!114 &4496708313202451342
