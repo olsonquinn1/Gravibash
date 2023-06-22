@@ -2570,8 +2570,8 @@ ScriptedImporter:
     - name: F_Thigh
       guid: e31ca5832616a0a43bb29ba28a5a2496
       position: {x: 49.464752, y: 90.50397, z: 0}
-      rotation: {x: 0, y: 0, z: -0.6273157, w: 0.77876514}
-      length: 87.24063
+      rotation: {x: 0, y: 0, z: -0.5725643, w: 0.81985986}
+      length: 79.94432
       parentId: -1
       color:
         serializedVersion: 2
@@ -4691,9 +4691,9 @@ ScriptedImporter:
     spriteBone:
     - name: F_Heel
       guid: 868214afe943bd0439da725ed4a60357
-      position: {x: 13.33844, y: 13.091736, z: 0}
-      rotation: {x: 0, y: 0, z: -0.12887496, w: 0.99166083}
-      length: 30.694174
+      position: {x: 13.338562, y: 13.091675, z: 0}
+      rotation: {x: 0, y: 0, z: -0.12887533, w: 0.99166083}
+      length: 30.694168
       parentId: -1
       color:
         serializedVersion: 2
@@ -5056,9 +5056,9 @@ ScriptedImporter:
     spriteBone:
     - name: F_Toe
       guid: ccb59ea3afe9c454a88b96660e4ee5be
-      position: {x: 55.568268, y: 20.568115, z: 0}
-      rotation: {x: 0, y: 0, z: -0.9880952, w: 0.15384355}
-      length: 54.7048
+      position: {x: 55.56839, y: 20.568176, z: 0}
+      rotation: {x: 0, y: 0, z: -0.98809534, w: 0.15384312}
+      length: 54.704784
       parentId: -1
       color:
         serializedVersion: 2
@@ -5442,9 +5442,9 @@ ScriptedImporter:
     spriteBone:
     - name: F_Foot
       guid: 5a3b4efce493f15458eff6bb82454863
-      position: {x: 71.2879, y: 26.785767, z: 0}
-      rotation: {x: 0, y: 0, z: -0.9940754, w: 0.10869304}
-      length: 61.16482
+      position: {x: 71.288025, y: 26.785767, z: 0}
+      rotation: {x: 0, y: 0, z: -0.9940754, w: 0.10869266}
+      length: 61.164867
       parentId: -1
       color:
         serializedVersion: 2
@@ -5928,9 +5928,9 @@ ScriptedImporter:
     spriteBone:
     - name: F_Leg
       guid: db4e90eb9368a7e4795b3810b8b92751
-      position: {x: 25.042664, y: 92.264404, z: 0}
-      rotation: {x: 0, y: 0, z: -0.759219, w: 0.6508353}
-      length: 83.45899
+      position: {x: 33.992767, y: 102.44867, z: 0}
+      rotation: {x: 0, y: 0, z: -0.783601, w: 0.62126446}
+      length: 95.17096
       parentId: -1
       color:
         serializedVersion: 2
@@ -7032,7 +7032,7 @@ ScriptedImporter:
       guid: 4afa71b06d0784b4198652f12717f0af
       position: {x: 54.52841, y: 93.2594, z: 0}
       rotation: {x: 0, y: 0, z: -0.6232401, w: 0.7820306}
-      length: 80.91912
+      length: 80.91913
       parentId: -1
       color:
         serializedVersion: 2
@@ -7385,9 +7385,9 @@ ScriptedImporter:
     spriteBone:
     - name: B_Toe
       guid: b2b2a5e7f64489b428f3141295456c4f
-      position: {x: 55.4245, y: 21.834106, z: 0}
-      rotation: {x: 0, y: 0, z: -0.9872539, w: 0.15915312}
-      length: 56.213596
+      position: {x: 55.4245, y: 21.834091, z: 0}
+      rotation: {x: 0, y: 0, z: -0.98725396, w: 0.15915313}
+      length: 56.21358
       parentId: -1
       color:
         serializedVersion: 2
@@ -7790,8 +7790,8 @@ ScriptedImporter:
     spriteBone:
     - name: B_Heel
       guid: 3480539e52eec6a4b9356a1d5ace2e0d
-      position: {x: 13.314453, y: 13.315552, z: 0}
-      rotation: {x: 0, y: 0, z: -0.15575871, w: 0.9877952}
+      position: {x: 13.314392, y: 13.315491, z: 0}
+      rotation: {x: 0, y: 0, z: -0.1557587, w: 0.9877951}
       length: 31.740952
       parentId: -1
       color:
@@ -8224,9 +8224,9 @@ ScriptedImporter:
     spriteBone:
     - name: B_Foot
       guid: b985e4dcdcb4a5a4d9c8e43496d6e275
-      position: {x: 71.12756, y: 27.778015, z: 0}
-      rotation: {x: 0, y: 0, z: -0.99430764, w: 0.10654757}
-      length: 61.090088
+      position: {x: 71.1275, y: 27.777954, z: 0}
+      rotation: {x: 0, y: 0, z: -0.9943076, w: 0.10654761}
+      length: 61.09008
       parentId: -1
       color:
         serializedVersion: 2
@@ -8529,9 +8529,9 @@ ScriptedImporter:
     spriteBone:
     - name: B_Leg
       guid: dd283b6f9bc1c9c4d859b5597db7a26f
-      position: {x: 29.584991, y: 101.380615, z: 0}
-      rotation: {x: 0, y: 0, z: -0.7711036, w: 0.63670975}
-      length: 92.26909
+      position: {x: 29.584991, y: 101.380554, z: 0}
+      rotation: {x: 0, y: 0, z: -0.77110374, w: 0.63670963}
+      length: 92.26912
       parentId: -1
       color:
         serializedVersion: 2
@@ -8873,7 +8873,7 @@ ScriptedImporter:
     - name: Tail_Base_6
       guid: db3e7609a8f309c41bf0f1d1a5743eb7
       position: {x: 77.01057, y: -0.000028258022, z: 0}
-      rotation: {x: 0, y: 0, z: 0.043978106, w: 0.9990325}
+      rotation: {x: 0, y: 0, z: 0.043978125, w: 0.9990325}
       length: 62.527035
       parentId: 2
       color:
@@ -19040,8 +19040,8 @@ ScriptedImporter:
     - name: F_Thigh
       guid: e31ca5832616a0a43bb29ba28a5a2496
       position: {x: 155.52591, y: 79.905945, z: 0}
-      rotation: {x: 0, y: -0, z: 0.71065813, w: 0.7035375}
-      length: 87.24063
+      rotation: {x: 0, y: -0, z: 0.7571274, w: 0.65326726}
+      length: 79.94432
       parentId: 0
       color:
         serializedVersion: 2
@@ -19130,7 +19130,7 @@ ScriptedImporter:
     - name: Tail_Base_6
       guid: db3e7609a8f309c41bf0f1d1a5743eb7
       position: {x: 77.01049, y: -0.00004822138, z: 0}
-      rotation: {x: 0, y: 0, z: 0.043978147, w: 0.99903256}
+      rotation: {x: 0, y: 0, z: 0.043978166, w: 0.9990325}
       length: 62.527027
       parentId: 10
       color:
@@ -19138,26 +19138,26 @@ ScriptedImporter:
         rgba: 4294934528
     - name: F_Leg
       guid: db4e90eb9368a7e4795b3810b8b92751
-      position: {x: 87.240616, y: 0.000009854555, z: 0}
-      rotation: {x: 0, y: 0, z: -0.18297409, w: 0.98311776}
-      length: 83.45899
+      position: {x: 79.944305, y: -0.00002893685, z: 0}
+      rotation: {x: 0, y: 0, z: -0.28672913, w: 0.9580117}
+      length: 95.17095
       parentId: 1
       color:
         serializedVersion: 2
         rgba: 4294934528
     - name: F_Foot
       guid: 5a3b4efce493f15458eff6bb82454863
-      position: {x: 83.459, y: 0.000013666333, z: 0}
-      rotation: {x: 0, y: 0, z: -0.5644575, w: 0.82546216}
-      length: 61.164825
+      position: {x: 95.17095, y: 0.000026064086, z: 0}
+      rotation: {x: 0, y: 0, z: -0.53241205, w: 0.8464854}
+      length: 61.164867
       parentId: 12
       color:
         serializedVersion: 2
         rgba: 4294901888
     - name: F_Toe
       guid: ccb59ea3afe9c454a88b96660e4ee5be
-      position: {x: 61.16484, y: 0.000009428117, z: 0}
-      rotation: {x: 0, y: 0, z: 0.04553301, w: 0.9989629}
+      position: {x: 61.164852, y: 0.0000021498245, z: 0}
+      rotation: {x: 0, y: 0, z: 0.045532957, w: 0.9989629}
       length: 54.704792
       parentId: 13
       color:
@@ -19176,33 +19176,33 @@ ScriptedImporter:
       guid: 4afa71b06d0784b4198652f12717f0af
       position: {x: 172.5288, y: 73.56506, z: 0}
       rotation: {x: 0, y: -0, z: 0.7143226, w: 0.6998166}
-      length: 80.91912
+      length: 80.919136
       parentId: 0
       color:
         serializedVersion: 2
         rgba: 4294901888
     - name: B_Leg
       guid: dd283b6f9bc1c9c4d859b5597db7a26f
-      position: {x: 80.91913, y: -0.000030222147, z: 0}
-      rotation: {x: 0, y: 0, z: -0.20620355, w: 0.9785091}
-      length: 92.26909
+      position: {x: 80.91914, y: -0.00003362705, z: 0}
+      rotation: {x: 0, y: 0, z: -0.20620373, w: 0.9785091}
+      length: 92.26912
       parentId: 16
       color:
         serializedVersion: 2
         rgba: 4286578943
     - name: B_Foot
       guid: b985e4dcdcb4a5a4d9c8e43496d6e275
-      position: {x: 92.269104, y: 0.0000044145527, z: 0}
-      rotation: {x: 0, y: 0, z: -0.55092615, w: 0.834554}
-      length: 61.09009
+      position: {x: 92.26912, y: -0.0000030685142, z: 0}
+      rotation: {x: 0, y: 0, z: -0.55092597, w: 0.83455414}
+      length: 61.09007
       parentId: 17
       color:
         serializedVersion: 2
         rgba: 4278223103
     - name: B_Toe
       guid: b2b2a5e7f64489b428f3141295456c4f
-      position: {x: 61.09008, y: 0.000004857061, z: 0}
-      rotation: {x: 0, y: 0, z: 0.0530577, w: 0.9985915}
+      position: {x: 61.090034, y: 0.0000052279306, z: 0}
+      rotation: {x: 0, y: 0, z: 0.053057652, w: 0.9985915}
       length: 56.213593
       parentId: 18
       color:
