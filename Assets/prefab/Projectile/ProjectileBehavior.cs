@@ -6,7 +6,6 @@ using Mirror;
 
 public class ProjectileBehavior : NetworkBehaviour
 {
-    [SerializeField] float ProjectileOffset = 0;
 
     [HideInInspector] public PlanetManager planetMan;
 
@@ -74,12 +73,29 @@ public class ProjectileBehavior : NetworkBehaviour
         else {
             Rigidbody2D otherBody = other.GetComponent<Rigidbody2D>();
             Vector2 otherVel;
-            if(otherBody != null)
-                otherVel = otherBody.velocity;
-            else
-                otherVel = new Vector2(0,0);
-            if((rb.velocity-otherVel).magnitude * 100 /(ProjectileSettings.projectileElacticity + 1) < ProjectileSettings.projectileBaseVel)
+            if(ProjectileSettings.isExplosive) {
+                Vector2 ImpactPos = collision.GetContact(0).point;
+                float circleRad = Sqrt(ProjectileSettings.projectileBaseDamage/0.01f);
+                Collider2D [] TempObjs = Physics2D.OverlapCircleAll(rb.position, circleRad);
+                foreach (Collider2D DamageObj in TempObjs) {
+                    if(DamageObj.CompareTag("Player")) {
+                        Player po = DamageObj.GetComponent<Player>();
+                        Vector2 PlayerPos = DamageObj.ClosestPoint(ImpactPos);
+                        Vector2 PosDiff = ImpactPos - PlayerPos;
+                        float healthChange = ProjectileSettings.projectileBaseDamage/(Mathf.Pow(Vector2.Distance(ImpactPos,PlayerPos),2));
+                        po.changeHealth(healthChange);
+                    }
+                }
                 beginDestroy();
+            }
+            else {
+                if(otherBody != null)
+                    otherVel = otherBody.velocity;
+                else
+                    otherVel = new Vector2(0,0);
+                if((rb.velocity-otherVel).magnitude * 100 /(ProjectileSettings.projectileElacticity + 1) < ProjectileSettings.projectileBaseVel)
+                    beginDestroy();
+            }
         } 
     }
 }

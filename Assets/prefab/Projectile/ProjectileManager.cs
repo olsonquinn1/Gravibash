@@ -45,4 +45,6 @@ public class ProjectileManager : ScriptableObject
     public float recoilForce;
     //how much the mouse aim gets changed (in deg)
     public float recoilAimChange;
+    
+    public bool isExplosive = false;
 }
