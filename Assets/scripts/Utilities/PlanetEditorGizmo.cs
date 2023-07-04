@@ -4,14 +4,21 @@ using UnityEngine;
 using static UnityEngine.Mathf;
 
 [ExecuteInEditMode]
-[RequireComponent(typeof(PlanetManager))]
 public class PlanetEditorGizmo : MonoBehaviour
 {
     private PlanetManager pm;
+    private PlanetManagerEditor pme;
+
+    private bool isEditor = false;
 
     void Awake()
     {
         pm = GetComponent<PlanetManager>();
+        if(pm == null) {
+            pme = GetComponent<PlanetManagerEditor>();
+            isEditor = true;
+        }
+
     }
 
     private void gizmoDraw(Vector3[] points) {
@@ -37,7 +44,13 @@ public class PlanetEditorGizmo : MonoBehaviour
     }
 
     void OnDrawGizmos() {
-        foreach(PlanetSceneObject p in pm.planets) {
+        List<PlanetSceneObject> planets;
+        if(!isEditor) {
+            planets = pm.planets;
+        } else {
+            planets = pme.planets;
+        }
+        foreach(PlanetSceneObject p in planets) {
             if(p.isStatic) {
                 gizmoDraw(ellipsePoints(100, p.origin.x, p.origin.y, p.planet.radius, p.planet.radius, 0));
             } else {

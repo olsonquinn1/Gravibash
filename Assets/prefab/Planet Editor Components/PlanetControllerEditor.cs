@@ -6,7 +6,7 @@ using Mirror;
 using static UnityEngine.Mathf;
 using UnityEngine.Rendering.Universal;
 
-public class PlanetController : NetworkBehaviour
+public class PlanetControllerEditor : MonoBehaviour
 {
     //Mesh
     private Material planetMaterial;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlanetEditor_CamController : MonoBehaviour
 {
     private float panSpeed = 10;
-    [SerializeField] private PlanetManager planetMan;
+    [SerializeField] private PlanetManagerEditor planetMan;
 
     void Start() {
     }
