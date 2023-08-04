@@ -128,7 +128,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Yolk_Particle_0: 4564587304176402116
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -19,7 +19,8 @@ public class Player : NetworkBehaviour
     [SerializeField] private LineRenderer pathRenderer;
 
     [Header("Projectile")]
-    [SerializeField] GameObject projectilePrefab;
+    [SerializeField] GameObject mainProjectilePrefab;
+    [SerializeField] GameObject sideProjectilePrefab;
     [SerializeField] Transform launchOffset;
 
     [Header("Camera")]
@@ -36,8 +37,10 @@ public class Player : NetworkBehaviour
     [SerializeField] private Animation anim;
     [SerializeField] private Animator animator;
     [SerializeField] ManagerDictionary ProjectileDictionary;
-    private ProjectileManager projectileProperties;
-    public string projType = "HeavyEgg";
+    [SerializeField] private ProjectileManager mainProjectileProperties;
+    [SerializeField] private ProjectileManager sideProjectileProperties;
+    public string mainProjType = "HeavyEgg";
+    public string sideProjType = "Explosive Yolk";
     
     //misc cache
     private Rigidbody2D rb;
@@ -126,15 +129,27 @@ public class Player : NetworkBehaviour
     //synced actions
     [Command]
     private void cmdShoot(Vector3 pos, Vector2 vel, float angle) {
-        angle = angle + projectileProperties.projectileBaseAcc*UnityEngine.Random.Range(-1.0f,1.0f) * PI / 180;
+        angle = angle + mainProjectileProperties.projectileBaseAcc*UnityEngine.Random.Range(-1.0f,1.0f) * PI / 180;
         shoot(pos, vel, angle);
     }
 
     [ClientRpc]
     private void shoot(Vector3 pos, Vector2 vel, float angle) {
-        GameObject projObj = Instantiate(projectilePrefab);
-        projObj.GetComponent<ProjectileBehavior>().Init(projectileProperties, pos, vel, angle);
+        GameObject projObj = Instantiate(mainProjectilePrefab);
+        projObj.GetComponent<ProjectileBehavior>().Init(mainProjectileProperties, pos, vel, angle);
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), projObj.GetComponent<Collider2D>());
+    }
+
+    private void cmdShootSide(Vector3 pos, Vector2 vel, float angle) {
+        angle = angle + sideProjectileProperties.projectileBaseAcc*UnityEngine.Random.Range(-1.0f,1.0f) * PI / 180;
+        shootSide(pos, vel, angle);
+    }
+
+    [ClientRpc]
+    private void shootSide(Vector3 pos, Vector2 vel, float angle) {
+        GameObject projObj2 = Instantiate(sideProjectilePrefab);
+        projObj2.GetComponent<ProjectileBehavior>().Init(sideProjectileProperties, pos, vel, angle);
+        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), projObj2.GetComponent<Collider2D>());
     }
 
     //collisions
@@ -184,7 +199,8 @@ public class Player : NetworkBehaviour
         if(!isLocalPlayer) {
             return;
         }
-        bool fire = Input.GetMouseButton(0);
+        bool fire1 = Input.GetMouseButton(0);
+        bool fire2 = Input.GetMouseButton(1);
         left = Input.GetKey(KeyCode.A);
         right = Input.GetKey(KeyCode.D);
         up = Input.GetKey(KeyCode.W);
@@ -221,8 +237,11 @@ public class Player : NetworkBehaviour
             }
         }
         
-        if(fire && shootTimer >= shootCooldown) {
-            cmdShoot(launchOffset.position, rb.velocity, mouseAngle);
+        if((fire1 || fire2) && shootTimer >= shootCooldown) {
+            if(fire1)
+                cmdShoot(launchOffset.position, rb.velocity, mouseAngle);
+            else
+                cmdShootSide(launchOffset.position, rb.velocity, mouseAngle);
             shootTimer = 0;
         }
 
@@ -384,8 +403,14 @@ public class Player : NetworkBehaviour
 
     void Awake() {
         debugLines = new List<LineRenderer>();
-        projectileProperties = ProjectileDictionary.loadProperties(projType);
-        projectilePrefab = projectileProperties.projectilePrefab;
+        mainProjectileProperties = ProjectileDictionary.loadProperties(mainProjType);
+        sideProjectileProperties = ProjectileDictionary.loadProperties(sideProjType);
+        if(sideProjectileProperties==null)
+            Debug.Log("f1");
+        mainProjectilePrefab = mainProjectileProperties.projectilePrefab;
+        sideProjectilePrefab = sideProjectileProperties.projectilePrefab;
+        if(sideProjectilePrefab==null)
+            Debug.Log("f2");
     }
 
     void Start() {

@@ -261,7 +261,8 @@ MonoBehaviour:
   jetPackPower: 500
   jetCorrectionRate: 360
   pathRenderer: {fileID: 8156655927540306503}
-  projectilePrefab: {fileID: 7445139758570961900, guid: dd90ea2aeb7802d43824a4dea6a2d356, type: 3}
+  mainProjectilePrefab: {fileID: 7445139758570961900, guid: dd90ea2aeb7802d43824a4dea6a2d356, type: 3}
+  sideProjectilePrefab: {fileID: 6930163915816799781, guid: a495e7f0ee19ea1448f3b5f8bb980ad0, type: 3}
   launchOffset: {fileID: 4282157685978323068}
   maxCameraDist: 5
   hudController: {fileID: 0}
@@ -273,7 +274,10 @@ MonoBehaviour:
   anim: {fileID: 2511691361481111335}
   animator: {fileID: 1702212951478131319}
   ProjectileDictionary: {fileID: 11400000, guid: 5429e372f65a6574db2b9801a9f11e05, type: 2}
-  projType: HeavyEgg
+  mainProjectileProperties: {fileID: 11400000, guid: df431e6c154b98b4e866d2487af55412, type: 2}
+  sideProjectileProperties: {fileID: 11400000, guid: 56f3895a6a88be14bade336a687955a5, type: 2}
+  mainProjType: HeavyEgg
+  sideProjType: Explosive Yolk
   debugText: {fileID: 0}
   onGround: 0
   health: 0
