@@ -34,6 +34,7 @@ public class Player : NetworkBehaviour
     [SerializeField] GameObject debugLinePrefab;
 
     [SerializeField] private Animation anim;
+    [SerializeField] private Animator animator;
     [SerializeField] ManagerDictionary ProjectileDictionary;
     private ProjectileManager projectileProperties;
     public string projType = "HeavyEgg";
@@ -63,6 +64,7 @@ public class Player : NetworkBehaviour
     private bool right = false;
     private bool down = false;
     private bool up = false;
+    private bool moving = false;
     private bool jet = false;
 
     //synced variables
@@ -150,7 +152,7 @@ public class Player : NetworkBehaviour
         }
     }
     
-    //util
+    //d
     private void alignToGravity() {
         rb.rotation -= Vector2.SignedAngle(
             pm.gravVectorSum(transform.position.x, transform.position.y, rb.mass),
@@ -188,7 +190,14 @@ public class Player : NetworkBehaviour
         up = Input.GetKey(KeyCode.W);
         down = Input.GetKey(KeyCode.S);
         jet = Input.GetKey(KeyCode.Space);
-
+        moving = false;
+        if(left || right || up || down && !jet)
+            moving = true;
+        if(moving) {
+            animator.Play("Run_Animation");
+        } else {
+            animator.Play("Idle_Animation");
+        }
         if(Input.GetKeyDown(KeyCode.R)) {
             changeHealth(healthMax);
             transform.position = pm.getSpawnLocation();
@@ -359,7 +368,7 @@ public class Player : NetworkBehaviour
         lookTransform = GameObject.Find("LookTransform").transform;
         CinemachineVirtualCamera vcam = GameObject.Find("Virtual Camera").GetComponent<CinemachineVirtualCamera>();
         vcam.Follow = lookTransform;
-        anim.Play();
+        animator.Play("Idle_Animation");
         hudController = GameObject.Find("HUD").GetComponent<HudController>();
         hudController.showNameChangeHud();
         hudController.playerScript = gameObject.GetComponent<Player>();
