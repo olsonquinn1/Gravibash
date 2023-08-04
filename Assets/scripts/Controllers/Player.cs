@@ -64,7 +64,7 @@ public class Player : NetworkBehaviour
     private bool right = false;
     private bool down = false;
     private bool up = false;
-    private bool moving = false;
+    private bool running = false;
     private bool jet = false;
 
     //synced variables
@@ -190,14 +190,22 @@ public class Player : NetworkBehaviour
         up = Input.GetKey(KeyCode.W);
         down = Input.GetKey(KeyCode.S);
         jet = Input.GetKey(KeyCode.Space);
-        moving = false;
-        if(left || right || up || down && !jet)
-            moving = true;
-        if(moving) {
-            animator.Play("Run_Animation");
+        running = false;
+        if(left || right && !jet)
+            running = true;
+        animator.SetBool("isRunning", running);
+        animator.SetBool("isOnGround", onGround);
+        animator.SetBool("isJetpack", jet);
+        animator.SetBool("isJump", up);
+
+        debugText.text = "vel: " + rb.velocity.magnitude;
+
+        if(animator.GetCurrentAnimatorStateInfo(0).IsName("Run_Animation")) {
+            animator.speed = Max(rb.velocity.magnitude / 3, 0.1f);
         } else {
-            animator.Play("Idle_Animation");
+            animator.speed = 1;
         }
+
         if(Input.GetKeyDown(KeyCode.R)) {
             changeHealth(healthMax);
             transform.position = pm.getSpawnLocation();
@@ -347,9 +355,9 @@ public class Player : NetworkBehaviour
             gVector
         );
 
-        if(gravVelRot < 85 && relVel.magnitude > 0.5f) {
+        if(gravVelRot < 0 && relVel.magnitude > 0.5f) {
             setForward(false);
-        } else if(gravVelRot > 95 && relVel.magnitude > 0.5f) {
+        } else if(gravVelRot > 0 && relVel.magnitude > 0.5f) {
             setForward(true);
         }
 
@@ -368,7 +376,6 @@ public class Player : NetworkBehaviour
         lookTransform = GameObject.Find("LookTransform").transform;
         CinemachineVirtualCamera vcam = GameObject.Find("Virtual Camera").GetComponent<CinemachineVirtualCamera>();
         vcam.Follow = lookTransform;
-        animator.Play("Idle_Animation");
         hudController = GameObject.Find("HUD").GetComponent<HudController>();
         hudController.showNameChangeHud();
         hudController.playerScript = gameObject.GetComponent<Player>();
