@@ -11,11 +11,9 @@ public class ManagerDictionary : ScriptableObject
     {
         foreach (ProjectileManager Settings in projList)
         {
-            Debug.Log(Settings.TypeName);
             if(projType.Equals(Settings.TypeName))
                 return Settings;
         }
-        Debug.Log("none");
         return null;
     }
 }

@@ -35,19 +35,4 @@ public class MenuController : MonoBehaviour
     private void onQuit() {
         Application.Quit();
     }
-
-    void update() {
-        if(isSettingKey)
-        {
-            Event e = Event.current;
-            Debug.Log("set key");
-            if (e.isKey)
-            {
-                Debug.Log("Detected key code: " + e.keyCode);
-                isSettingKey = false;
-            }
-        }
-        else
-            Debug.Log("not set key");
-    }
 }

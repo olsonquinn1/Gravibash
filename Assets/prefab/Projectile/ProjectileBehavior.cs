@@ -73,7 +73,7 @@ public class ProjectileBehavior : NetworkBehaviour
         else {
             Rigidbody2D otherBody = other.GetComponent<Rigidbody2D>();
             Vector2 otherVel;
-            if(ProjectileSettings.isExplosive) {
+            if(ProjectileSettings.isExplosive&&(timeAlive>destructionTime)) {
                 Vector2 ImpactPos = collision.GetContact(0).point;
                 float circleRad = Sqrt(ProjectileSettings.projectileBaseDamage/0.01f);
                 Collider2D [] TempObjs = Physics2D.OverlapCircleAll(rb.position, circleRad);

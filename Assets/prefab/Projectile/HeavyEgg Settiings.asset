@@ -30,3 +30,4 @@ MonoBehaviour:
   projectileElacticity: 0.5
   recoilForce: 5
   recoilAimChange: 5
+  isExplosive: 0
